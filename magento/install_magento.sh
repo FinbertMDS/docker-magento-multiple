@@ -30,7 +30,7 @@ php bin/magento setup:static-content:deploy -f
 # show url magento
 echo 'Open in browser: '
 echo 'Frontend: '${MAGENTO_URL}
-echo 'Backend: '${MAGENTO_URL}'/admin'
+echo 'Backend: '${MAGENTO_URL}'admin'
 
 # add url to host
 echo "Run command at computer: sudo echo '127.0.0.1 `echo ${MAGENTO_URL} | awk -F[/:] '{print $4}'`' >> /etc/hosts"
