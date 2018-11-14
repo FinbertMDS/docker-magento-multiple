@@ -1,5 +1,5 @@
 #!/bin/bash
-tar xvf magento2.tar.gz
+tar xvf magento.tar.gz
 chmod -R 777 ./
 # Install magento
 php bin/magento setup:install --use-rewrites=1 \

@@ -7,11 +7,6 @@ services:
       - 3309:3306
     env_file:
       - .env
-    entrypoint:
-      sh -c "
-        echo 'CREATE DATABASE IF NOT EXISTS magento22671; CREATE DATABASE IF NOT EXISTS magento21570;' > /docker-entrypoint-initdb.d/init.sql;
-        /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-      "
     volumes:
       - ./data/mysql:/var/lib/mysql
     networks:

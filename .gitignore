@@ -1,4 +1,5 @@
 .idea/
 *.tar.gz
 src/
-data/mysql
+data/mysql/
+init_data/
