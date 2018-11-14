@@ -26,3 +26,8 @@ php bin/magento config:set admin/captcha/enable 0
 
 php bin/magento deploy:mode:set developer
 php bin/magento setup:static-content:deploy -f
+
+# show url magento
+echo 'Open in browser: '
+echo 'Frontend: '${MAGENTO_URL}
+echo 'Backend: '${MAGENTO_URL}'/admin'
