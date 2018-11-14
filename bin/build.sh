@@ -24,7 +24,7 @@ function initFolder() {
 # prepare file mysql to import to database
 function importDataMysql() {
     local MYSQL_INIT_DATA_FOLDER='data/init_data/'
-    mkdir -p MYSQL_INIT_DATA_FOLDER
+    mkdir -p ${MYSQL_INIT_DATA_FOLDER}
 
     cp 'data/prepare_data/init.sql' ${MYSQL_INIT_DATA_FOLDER}'init.sql'
 
