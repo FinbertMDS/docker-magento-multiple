@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  magento211570:
+    build:
+      context: ./magento
+      dockerfile: Dockerfile_7.0
+    ports:
+      - 21570:80
+    depends_on:
+      - db
+    environment:
+      - MAGENTO_URL=http://magento2.com:21570/
+      - MYSQL_DATABASE=magento21570
+    env_file:
+      - .env
+    volumes:
+      - ./src/2.1.15:/var/www/html
+    networks:
+      webnet:
+networks:
+  webnet:
