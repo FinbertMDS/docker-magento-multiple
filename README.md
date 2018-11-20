@@ -12,7 +12,7 @@
             
             2. Then, you must add line to file `data/prepare_data/init.sql`
                 ```text
-                CREATE DATABASE IF NOT EXISTS magento21570;
+                CREATE DATABASE IF NOT EXISTS magento21157;
                 ```
             
             3. Then, you must add copy file `docker-compose-magento-2.2.6-php-7.1.yml` to version corresponding: example `docker-compose-magento-2.1.15-php-7.0.yml`. 
@@ -55,21 +55,15 @@
     ```
 3. Run service
     ```bash
-    ./bin/run.sh #Run containers, show output to console
-    ./bin/run.sh -d #Run containers in the background, print new container names
+    ./bin/run.sh #Run containers in the background, print new container names
     ```
 4. Provide permission edit for user `www-data` to in docker container folder `/var/www/html`
     ```bash
-    docker exec -it docker-magento-multiple_magento22671_1 bash
-    ```
-    ```bash
-    chown -R www-data:www-data .
-    chmod -R 777 .
+    docker exec docker-magento-multiple_magento_2.2.6_7.1_1 bash -c "chown -R www-data:www-data . && chmod -R 777 ."
     ```
 5. Install magento 2
     ```bash
-    docker exec -it -u www-data docker-magento-multiple_magento22671_1 bash
-    ./install_magento.sh 
+    docker exec -u www-data docker-magento-multiple_magento_2.2.6_7.1_1 bash -c "./install_magento2.sh"
     ```
 
 ## Stop service
@@ -104,8 +98,8 @@
             
             Password: admin123
     - Magento 2.1.15: 
-        - Frontend: http://magento21570.com:21570/
-        - Backend: http://magento21570.com:21570/admin/
+        - Frontend: http://magento21157.com:21157/
+        - Backend: http://magento21157.com:21157/admin/
         
             Username: admin1
             

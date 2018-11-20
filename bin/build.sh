@@ -3,6 +3,14 @@
 source .env
 MAGENTO_VERSION_ARRAY=(${MAGENTO_VERSIONES//,/ })
 
+# install curl to wait service docker webserver start before install magento
+sudo apt-get install curl
+
+# TODO init file data/prepare_data/init.sql dynamic by magento version
+function createFileInitDatabaseMysql() {
+    echo 'init file data/prepare_data/init.sql done'
+}
+
 # remove all persist data
 function removePersistData() {
     sudo rm -rf data/mysql/*
@@ -57,22 +65,37 @@ function copyBashInstallMagento() {
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
        local MAGENTO_FOLDER_SRC='src/'${i}
-       cp magento/install_magento.sh ${MAGENTO_FOLDER_SRC}
+       cp magento/install_magento2.sh ${MAGENTO_FOLDER_SRC}
     done
 }
 
-function buildDocker() {
+function getVersionPhp() {
+    PHP_VERSION=""
+    if [[ ${1} == 2.2* ]]; then
+        PHP_VERSION="7.1"
+    elif [[ ${1} == 2.1* ]]; then
+        PHP_VERSION="7.0"
+    elif [[ ${1} == 1.* ]]; then
+        PHP_VERSION="5.6"
+    fi
+    echo ${PHP_VERSION}
+}
+
+function getDockerCommand() {
     local DOCKER_BUILD_COMMAND='docker-compose -f docker-compose.yml '
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
-         if [[ ${i} == 2.2* ]]; then
-            DOCKER_BUILD_COMMAND=${DOCKER_BUILD_COMMAND}'-f docker-compose-magento-'${i}'-php-7.1.yml '
-         fi
-         if [[ ${i} == 2.1* ]]; then
-            DOCKER_BUILD_COMMAND=${DOCKER_BUILD_COMMAND}'-f docker-compose-magento-'${i}'-php-7.0.yml '
-         fi
+        local PHP_VERSION=`getVersionPhp "${i}"`
+        if [[ -z "${PHP_VERSION}" ]]; then
+            DOCKER_BUILD_COMMAND=${DOCKER_BUILD_COMMAND}'-f docker-compose-magento-'${i}'-php-'${PHP_VERSION}'.yml '
+        fi
     done
-    DOCKER_BUILD_COMMAND=${DOCKER_BUILD_COMMAND}'build '
+    DOCKER_BUILD_COMMAND=${DOCKER_BUILD_COMMAND}${1}
+    return ${DOCKER_BUILD_COMMAND}
+}
+
+function buildDocker() {
+    local DOCKER_BUILD_COMMAND=`getDockerCommand "build "`
     eval "${DOCKER_BUILD_COMMAND}"
 }
 
