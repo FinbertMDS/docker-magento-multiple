@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-source .env
-MAGENTO_VERSION_ARRAY=(${MAGENTO_VERSIONES//,/ })
+source bin/common.sh
 
 if [[ ! ${MAGENTO_EDITION} = 'CE' ]]; then
     exit
@@ -19,7 +18,11 @@ function downloadMagentoSrc() {
     fi
 }
 
-for i in "${MAGENTO_VERSION_ARRAY[@]}"
-do
-    downloadMagentoSrc ${i}
-done
+function main() {
+    for i in "${MAGENTO_VERSION_ARRAY[@]}"
+    do
+        downloadMagentoSrc ${i}
+    done
+}
+
+main

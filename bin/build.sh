@@ -1,25 +1,31 @@
 #!/usr/bin/env bash
 
-source .env
-MAGENTO_VERSION_ARRAY=(${MAGENTO_VERSIONES//,/ })
+source bin/common.sh
 
-# install curl to wait service docker webserver start before install magento
-sudo apt-get install curl
-
-# TODO init file data/prepare_data/init.sql dynamic by magento version
-function createFileInitDatabaseMysql() {
-    echo 'init file data/prepare_data/init.sql done'
+# init file data/prepare_data/init.sql dynamic by magento version
+function create_file_init_database_mysql() {
+    print_status 'Init file data/prepare_data/init.sql...'
+    INIT_DATABASE_FILE='data/prepare_data/init.sql'
+    rm -f ${INIT_DATABASE_FILE}
+    touch ${INIT_DATABASE_FILE}
+    for i in "${MAGENTO_VERSION_ARRAY[@]}"
+    do
+        local PORT_SERVICE_DOCKER=`get_port_service_docker "${i}"`
+        local INIT_DATABASE_STRING='CREATE DATABASE IF NOT EXISTS magento'${PORT_SERVICE_DOCKER}';'
+        echo ${INIT_DATABASE_STRING} >> ${INIT_DATABASE_FILE}
+    done
+    print_done
 }
 
 # remove all persist data
-function removePersistData() {
+function remove_persist_data() {
     sudo rm -rf data/mysql/*
     sudo rm -rf src/*
     sudo rm -rf src/.*
 }
 
 # init folder persist data
-function initFolder() {
+function init_folder() {
     mkdir -p data/mysql
     mkdir -p src
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
@@ -30,8 +36,8 @@ function initFolder() {
 }
 
 # prepare file mysql to import to database
-function importDataMysql() {
-    local MYSQL_INIT_DATA_FOLDER='data/init_data/'
+function import_data_mysql() {
+    MYSQL_INIT_DATA_FOLDER='data/init_data/'
     mkdir -p ${MYSQL_INIT_DATA_FOLDER}
 
     cp 'data/prepare_data/init.sql' ${MYSQL_INIT_DATA_FOLDER}'init.sql'
@@ -46,7 +52,7 @@ function importDataMysql() {
 }
 
 # check add file tar.gz of all version magento existed
-function copyFileInstallMagento() {
+function copy_file_install_magento() {
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
        local MAGENTO_FILENAME_SRC='magento2-'${i}'.tar.gz'
@@ -61,7 +67,7 @@ function copyFileInstallMagento() {
     done
 }
 
-function copyBashInstallMagento() {
+function copy_bash_install_magento() {
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
        local MAGENTO_FOLDER_SRC='src/'${i}
@@ -69,39 +75,21 @@ function copyBashInstallMagento() {
     done
 }
 
-function getVersionPhp() {
-    PHP_VERSION=""
-    if [[ ${1} == 2.2* ]]; then
-        PHP_VERSION="7.1"
-    elif [[ ${1} == 2.1* ]]; then
-        PHP_VERSION="7.0"
-    elif [[ ${1} == 1.* ]]; then
-        PHP_VERSION="5.6"
-    fi
-    echo ${PHP_VERSION}
+function build_docker() {
+    print_status "Building docker..."
+    local DOCKER_BUILD_COMMAND=`get_docker_command "build "`
+    exec_cmd "${DOCKER_BUILD_COMMAND}"
+    print_done
 }
 
-function getDockerCommand() {
-    local DOCKER_BUILD_COMMAND='docker-compose -f docker-compose.yml '
-    for i in "${MAGENTO_VERSION_ARRAY[@]}"
-    do
-        local PHP_VERSION=`getVersionPhp "${i}"`
-        if [[ -z "${PHP_VERSION}" ]]; then
-            DOCKER_BUILD_COMMAND=${DOCKER_BUILD_COMMAND}'-f docker-compose-magento-'${i}'-php-'${PHP_VERSION}'.yml '
-        fi
-    done
-    DOCKER_BUILD_COMMAND=${DOCKER_BUILD_COMMAND}${1}
-    return ${DOCKER_BUILD_COMMAND}
+function main() {
+    remove_persist_data
+    init_folder
+    create_file_init_database_mysql
+    import_data_mysql
+    copy_file_install_magento
+    copy_bash_install_magento
+    build_docker
 }
 
-function buildDocker() {
-    local DOCKER_BUILD_COMMAND=`getDockerCommand "build "`
-    eval "${DOCKER_BUILD_COMMAND}"
-}
-
-removePersistData
-initFolder
-importDataMysql
-copyFileInstallMagento
-copyBashInstallMagento
-buildDocker
+main
