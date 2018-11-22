@@ -37,19 +37,17 @@ function get_docker_command() {
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
         local PHP_VERSION=`get_version_php "${i}"`
-        if [[ -z "${PHP_VERSION}" ]]; then
+        if [[ ! -z "${PHP_VERSION}" ]]; then
             DOCKER_BUILD_COMMAND=${DOCKER_BUILD_COMMAND}'-f docker-compose-magento-'${i}'-php-'${PHP_VERSION}'.yml '
         fi
     done
     DOCKER_BUILD_COMMAND=${DOCKER_BUILD_COMMAND}${1}
-    return ${DOCKER_BUILD_COMMAND}
+    echo ${DOCKER_BUILD_COMMAND}
 }
 
 # print status
 function print_status() {
-    echo
     echo "## $1"
-    echo
 }
 
 # print Done
@@ -89,4 +87,8 @@ function curl_check () {
   fi
 }
 
-curl_check
+function main() {
+    curl_check
+}
+
+main

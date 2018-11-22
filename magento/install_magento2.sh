@@ -1,5 +1,5 @@
 #!/bin/bash
-tar xvf magento.tar.gz
+tar xvf magento.tar.gz &> /dev/null
 chmod -R 777 ./
 # Install magento
 php bin/magento setup:install --use-rewrites=1 \
@@ -26,11 +26,3 @@ php bin/magento config:set admin/captcha/enable 0
 
 php bin/magento deploy:mode:set developer
 php bin/magento setup:static-content:deploy -f
-
-# show url magento
-echo 'Open in browser: '
-echo 'Frontend: '${MAGENTO_URL}
-echo 'Backend: '${MAGENTO_URL}'admin'
-
-# add url to host
-echo "Run command at computer: sudo echo '127.0.0.1 `echo ${MAGENTO_URL} | awk -F[/:] '{print $4}'`' >> /etc/hosts"
