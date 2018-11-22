@@ -46,7 +46,7 @@ function add_host_to_local() {
     print_status "Add host to local..."
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
-        exec_cmd "echo '127.0.0.1 magento'`get_port_service_docker "${i}"`'.com' | sudo tee --append /etc/hosts > /dev/null"
+        exec_cmd "grep -q -F '127.0.0.1 magento`get_port_service_docker "${i}"`.com' /etc/hosts || echo '127.0.0.1 magento`get_port_service_docker "${i}"`.com' | sudo tee --append /etc/hosts > /dev/null"
     done
     print_status "Done."
 }
@@ -58,13 +58,14 @@ function print_site_magento_list() {
         local PORT_SERVICE_DOCKER=`get_port_service_docker "${i}"`
         echo
         echo "Magento version ${i}"
-        echo "Frontend: http://magento'${PORT_SERVICE_DOCKER}'.com:'${PORT_SERVICE_DOCKER}'/'"
-        echo "Backend: http://magento'${PORT_SERVICE_DOCKER}'.com:'${PORT_SERVICE_DOCKER}'/admin'"
+        echo "Frontend: http://magento${PORT_SERVICE_DOCKER}.com:${PORT_SERVICE_DOCKER}/"
+        echo "Backend: http://magento${PORT_SERVICE_DOCKER}.com:${PORT_SERVICE_DOCKER}/admin"
     done
 }
 
 function main() {
     runDocker
+    # TODO wait for execute all sql in init_data to import data to mysql
     installMagentoForAllContainers
     add_host_to_local
     print_site_magento_list
