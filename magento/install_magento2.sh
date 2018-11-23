@@ -1,6 +1,8 @@
 #!/bin/bash
 tar xvf magento.tar.gz &> /dev/null
 chmod -R 777 ./
+# wait for database
+php mysql.php
 # Install magento
 php bin/magento setup:install --use-rewrites=1 \
     --db-host=$MYSQL_HOST \

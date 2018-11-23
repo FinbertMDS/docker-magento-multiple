@@ -65,7 +65,6 @@ function print_site_magento_list() {
 
 function main() {
     runDocker
-    # TODO wait for execute all sql in init_data to import data to mysql
     installMagentoForAllContainers
     add_host_to_local
     print_site_magento_list

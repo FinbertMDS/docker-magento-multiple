@@ -19,9 +19,8 @@ function create_file_init_database_mysql() {
 
 # remove all persist data
 function remove_persist_data() {
-    sudo rm -rf data/mysql/*
-    sudo rm -rf src/*
-    sudo rm -rf src/.*
+    sudo rm -rf data/mysql
+    sudo rm -rf src
 }
 
 # init folder persist data
@@ -72,6 +71,7 @@ function copy_bash_install_magento() {
     do
        local MAGENTO_FOLDER_SRC='src/'${i}
        cp magento/install_magento2.sh ${MAGENTO_FOLDER_SRC}
+       cp magento/mysql.php ${MAGENTO_FOLDER_SRC}
     done
 }
 

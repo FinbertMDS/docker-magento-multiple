@@ -8,6 +8,7 @@ services:
       - 3309:3306
     environment:
       MYSQL_ROOT_PASSWORD: magento
+      MYSQL_DATABASE: magento
     networks:
       - webnet
 
