@@ -3,7 +3,7 @@ version: '3'
 services:
   db:
     build: ./data
-    container_name: ngovanhuy0241/docker-magento-multiple_db_1
+    container_name: docker-magento-multiple_db_1
     ports:
       - 3309:3306
     environment:

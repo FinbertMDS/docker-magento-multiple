@@ -5,7 +5,7 @@ services:
     build:
       context: ./magento
       dockerfile: Dockerfile_7.1
-    container_name: ngovanhuy0241/docker-magento-multiple_magento_2.2.6_7.1_1
+    container_name: docker-magento-multiple_magento_2.2.6_7.1_1
     ports:
       - 22671:80
     depends_on:
