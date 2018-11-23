@@ -1,10 +1,11 @@
 version: '3'
 
 services:
-  magento211570:
-    build:
-      context: ./magento
-      dockerfile: Dockerfile_7.0
+  magento21157:
+#    build:
+#      context: ./magento
+#      dockerfile: Dockerfile_7.0
+    image: ngovanhuy0241/docker-magento-multiple_magento:21157
     container_name: docker-magento-multiple_magento_2.1.15_7.0_1
     ports:
       - 21157:80
