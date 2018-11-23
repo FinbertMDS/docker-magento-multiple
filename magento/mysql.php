@@ -13,9 +13,7 @@ while (true) {
         echo "Connect to database ".$dbName." successfully.";
         exit();
     } catch (Exception $e) {
-        echo $e->getMessage();
+        sleep(3);
+        echo "...";
     }
-    sleep(3);
-    echo "waiting...";
-    echo "<br>";
 }
