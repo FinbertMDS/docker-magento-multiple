@@ -25,4 +25,4 @@ function main() {
     done
 }
 
-main
+calculate_time_run_command main

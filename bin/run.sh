@@ -71,4 +71,4 @@ function main() {
     # TODO install for magento 1
 }
 
-main
+calculate_time_run_command main

@@ -92,4 +92,4 @@ function main() {
     build_docker
 }
 
-main
+calculate_time_run_command main

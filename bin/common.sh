@@ -87,6 +87,14 @@ function curl_check () {
   fi
 }
 
+function calculate_time_run_command() {
+    START=$(date +%s)
+    $1
+    END=$(date +%s)
+    DIFF=$(( $END - $START ))
+    echo "+ ${1}: It took $DIFF seconds"
+}
+
 function main() {
     curl_check
 }
