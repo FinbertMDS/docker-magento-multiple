@@ -10,6 +10,7 @@ while (true) {
             'root',
             $dbPassword);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        echo "Connect to database ".$dbName." successfully.";
         exit();
     } catch (Exception $e) {
         echo $e->getMessage();
