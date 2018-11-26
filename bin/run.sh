@@ -26,19 +26,19 @@ function waitForAllServiceStartDone() {
     done
 }
 
-function installMagento2() {
+function installMagento() {
     local PHP_VERSION=`get_version_php ${1}`
     if [[ ! -z ${PHP_VERSION} ]]; then
         local DOCKER_NAME="docker-magento-multiple_magento_"${1}"_"${PHP_VERSION}"_1"
         docker exec ${DOCKER_NAME} bash -c "chown -R www-data:www-data . && chmod -R 777 ."
-        docker exec -u www-data ${DOCKER_NAME} bash -c "./install_magento2.sh"
+        docker exec -u www-data ${DOCKER_NAME} bash -c "./install_magento.sh"
     fi
 }
 
 function installMagentoForAllContainers() {
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
-        installMagento2 ${i}
+        installMagento ${i}
     done
 }
 

@@ -15,7 +15,7 @@ function get_magento_sample_data_download_url() {
     echo ${MAGENTO_SAMPLE_DATA_DOWNLOAD_URL}
 }
 
-function downloadMagento1() {
+function download_magento1() {
     MAGENTO_DOWNLOAD_URL='http://pubfiles.nexcess.net/magento/ce-packages/magento-'${1}'.tar.gz'
     MAGENTO_SAMPLE_DATA_VERSION=`get_version_sample_data_magento1 ${1}`
     MAGENTO_SAMPLE_DATA_DOWNLOAD_URL=`get_magento_sample_data_download_url ${MAGENTO_SAMPLE_DATA_VERSION}`
@@ -32,7 +32,7 @@ function downloadMagento1() {
     fi
 }
 
-function downloadMagento2() {
+function download_magento2() {
     local MAGENTO_DOWNLOAD_URL='http://pubfiles.nexcess.net/magento/ce-packages/magento2-'${1}'.tar.gz'
     if [[ ${SAMPLE_DATA} = '1' ]]; then
         MAGENTO_DOWNLOAD_URL='http://pubfiles.nexcess.net/magento/ce-packages/magento2-with-samples-'${1}'.tar.gz'
@@ -44,18 +44,18 @@ function downloadMagento2() {
     fi
 }
 
-function downloadMagento() {
+function download_magento() {
     if [[ ${1} == 2.* ]]; then
-        downloadMagento2 $1
+        download_magento2 $1
     elif [[ ${1} == 1.* ]]; then
-        downloadMagento1 $1
+        download_magento1 $1
     fi
 }
 
 function main() {
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
-        downloadMagento ${i}
+        download_magento ${i}
     done
 }
 

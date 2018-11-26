@@ -2,11 +2,13 @@ version: '3'
 
 services:
   db:
-#    build: ./data
-    image: ngovanhuy0241/docker-magento-multiple_db
+    build: ./data
+#    image: ngovanhuy0241/docker-magento-multiple_db
     container_name: docker-magento-multiple_db_1
 #    ports:
 #      - 3309:3306
+    volumes:
+      - ./data/mysql:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: magento
       MYSQL_DATABASE: magento

@@ -19,6 +19,7 @@ function create_file_init_database_mysql() {
 
 # remove all persist data
 function remove_persist_data() {
+    rm -rf data/init_data
     sudo rm -rf data/mysql
     sudo rm -rf src
 }
@@ -39,7 +40,7 @@ function import_data_mysql() {
     MYSQL_INIT_DATA_FOLDER='data/init_data/'
     mkdir -p ${MYSQL_INIT_DATA_FOLDER}
 
-    cp 'data/prepare_data/init.sql' ${MYSQL_INIT_DATA_FOLDER}'init.sql'
+#    cp 'data/prepare_data/init.sql' ${MYSQL_INIT_DATA_FOLDER}'init.sql'
 
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
@@ -54,24 +55,25 @@ function import_data_mysql() {
 function copy_file_install_magento() {
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
-       local MAGENTO_FILENAME_SRC='magento2-'${i}'.tar.gz'
-       if [[ ! -f 'magento/'${MAGENTO_FILENAME_SRC} ]]; then
+        MAGENTO_VERSION=`get_version_magento ${i}`
+        MAGENTO_FILENAME_SRC='magento'${MAGENTO_VERSION}'-'${i}'.tar.gz'
+        if [[ ! -f 'magento/'${MAGENTO_FILENAME_SRC} ]]; then
           echo "Please place file ${MAGENTO_FILENAME_SRC} at folder magento"
           exit
-       fi
-       local MAGENTO_FOLDER_SRC='src/'${i}
-       if [[ ! -f ${MAGENTO_FOLDER_SRC}${MAGENTO_FILENAME_SRC} ]]; then
+        fi
+        local MAGENTO_FOLDER_SRC='src/'${i}
+        if [[ ! -f ${MAGENTO_FOLDER_SRC}${MAGENTO_FILENAME_SRC} ]]; then
             cp 'magento/'${MAGENTO_FILENAME_SRC} ${MAGENTO_FOLDER_SRC}'/magento.tar.gz'
         fi
-    done
-}
-
-function copy_bash_install_magento() {
-    for i in "${MAGENTO_VERSION_ARRAY[@]}"
-    do
-       local MAGENTO_FOLDER_SRC='src/'${i}
-       cp magento/install_magento2.sh ${MAGENTO_FOLDER_SRC}
-       cp magento/mysql.php ${MAGENTO_FOLDER_SRC}
+        if [[ ${SAMPLE_DATA} = '1' ]]; then
+            if [[ ${MAGENTO_VERSION} = '1' ]]; then
+                MAGENTO_SAMPLE_DATA_VERSION=`get_version_sample_data_magento1 ${i}`
+                local MAGENTO_SAMPLE_FILENAME='magento/magento1-sample-data-'${MAGENTO_SAMPLE_DATA_VERSION}'.tar.gz'
+                cp ${MAGENTO_SAMPLE_FILENAME} ${MAGENTO_FOLDER_SRC}'/magento-sample.tar.gz'
+            fi
+        fi
+        cp 'magento/install_magento'${MAGENTO_VERSION}'.sh' ${MAGENTO_FOLDER_SRC}'/install_magento.sh'
+        cp magento/mysql.php ${MAGENTO_FOLDER_SRC}
     done
 }
 
@@ -85,10 +87,10 @@ function build_docker() {
 function main() {
     remove_persist_data
     init_folder
-    create_file_init_database_mysql
+#    # not init file init.sql because create databases in file .sql of every version
+#    create_file_init_database_mysql
     import_data_mysql
     copy_file_install_magento
-    copy_bash_install_magento
     build_docker
 }
 

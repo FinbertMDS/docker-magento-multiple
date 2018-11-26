@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  magento19310:
+    build:
+      context: ./magento
+      dockerfile: Dockerfile_5.6
+    container_name: docker-magento-multiple_magento_1.9.3.10_5.6_1
+    ports:
+      - 19310:80
+    depends_on:
+      - db
+    environment:
+      - MAGENTO_URL=http://magento19310.com:19310/
+      - MYSQL_DATABASE=magento19310
+    env_file:
+      - .env
+    volumes:
+      - ./src/1.9.3.10:/var/www/html
+    networks:
+      webnet:
+networks:
+  webnet:

@@ -16,6 +16,16 @@ function get_version_php() {
     echo ${PHP_VERSION}
 }
 
+function get_version_magento() {
+    MAGENTO_VERSION=''
+    if [[ ${1} == 2.* ]]; then
+        MAGENTO_VERSION=2
+    elif [[ ${1} == 1.* ]]; then
+        MAGENTO_VERSION=1
+    fi
+    echo ${MAGENTO_VERSION}
+}
+
 function version_lib() {
     if [[ $1 == $2 ]]
     then
