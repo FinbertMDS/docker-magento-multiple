@@ -16,6 +16,66 @@ function get_version_php() {
     echo ${PHP_VERSION}
 }
 
+function version_lib() {
+    if [[ $1 == $2 ]]
+    then
+        return 0
+    fi
+    local IFS=.
+    local i ver1=($1) ver2=($2)
+    # fill empty fields in ver1 with zeros
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
+    do
+        ver1[i]=0
+    done
+    for ((i=0; i<${#ver1[@]}; i++))
+    do
+        if [[ -z ${ver2[i]} ]]
+        then
+            # fill empty fields in ver2 with zeros
+            ver2[i]=0
+        fi
+        if ((10#${ver1[i]} > 10#${ver2[i]}))
+        then
+            return 1
+        fi
+        if ((10#${ver1[i]} < 10#${ver2[i]}))
+        then
+            return 2
+        fi
+    done
+    return 0
+}
+
+# compare version: $1 and $2 with operator $3
+# echo 1 if version $1 operator $3 with version $2 else echo 0.
+# example: version_compare '1.9.4' '1.9.3' '>' => echo 1
+function version_compare() {
+    version_lib $1 $2
+    case $? in
+        0) op='=';;
+        1) op='>';;
+        2) op='<';;
+    esac
+    if [[ ${op} != $3 ]]
+    then
+        echo 0
+    else
+        echo 1
+    fi
+}
+
+function get_version_sample_data_magento1() {
+    if [[ ${1} == 1.* ]]; then
+        VERSION_COMPARE_RESULT=`version_compare $1 '1.9.2.4' '<'`
+        MAGENTO_SAMPLE_DATA_VERSION='1.9.2.4'
+        if [[ ${VERSION_COMPARE_RESULT} = '1' ]]; then
+            MAGENTO_SAMPLE_DATA_VERSION='1.9.1.0'
+        fi
+        echo ${MAGENTO_SAMPLE_DATA_VERSION}
+    fi
+}
+
 # get port of service docker.
 # if port >= 6 character, remove last character
 # ex: version magento is 2.2.6 => port: 22671; 2.1.15 => port: 21157
