@@ -2,12 +2,12 @@
 
 source bin/common.sh
 
-function runDocker() {
+function run_docker() {
     local DOCKER_BUILD_COMMAND=`get_docker_command "up -d"`
     exec_cmd "${DOCKER_BUILD_COMMAND}"
 }
 
-function waitServiceDockerStartDone() {
+function wait_service_docker_start_done() {
     local PORT_SERVICE_DOCKER=`get_port_service_docker "${1}"`
     if [[ ! -z "${PORT_SERVICE_DOCKER}" ]]; then
         while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' 127.0.0.1:"${PORT_SERVICE_DOCKER}")" != "200" ]];
@@ -19,14 +19,14 @@ function waitServiceDockerStartDone() {
     fi
 }
 
-function waitForAllServiceStartDone() {
+function wait_for_all_service_start_done() {
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
-        waitServiceDockerStartDone ${i}
+        wait_service_docker_start_done ${i}
     done
 }
 
-function installMagento() {
+function install_magento() {
     local PHP_VERSION=`get_version_php ${1}`
     if [[ ! -z ${PHP_VERSION} ]]; then
         local DOCKER_NAME="docker-magento-multiple_magento_"${1}"_"${PHP_VERSION}"_1"
@@ -35,10 +35,10 @@ function installMagento() {
     fi
 }
 
-function installMagentoForAllContainers() {
+function install_magento_for_all_containers() {
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
-        installMagento ${i}
+        install_magento ${i}
     done
 }
 
@@ -48,7 +48,7 @@ function add_host_to_local() {
     do
         exec_cmd "grep -q -F '127.0.0.1 magento`get_port_service_docker "${i}"`.com' /etc/hosts || echo '127.0.0.1 magento`get_port_service_docker "${i}"`.com' | sudo tee --append /etc/hosts > /dev/null"
     done
-    print_status "Done."
+    print_done
 }
 
 function print_site_magento_list() {
@@ -64,11 +64,10 @@ function print_site_magento_list() {
 }
 
 function main() {
-    runDocker
-    installMagentoForAllContainers
+    run_docker
+    install_magento_for_all_containers
     add_host_to_local
     print_site_magento_list
-    # TODO install for magento 1
 }
 
 calculate_time_run_command main

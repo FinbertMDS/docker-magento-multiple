@@ -4,7 +4,7 @@ while (true) {
     try {
         $dbHost = getenv('MYSQL_HOST');
         $dbName = getenv('MYSQL_DATABASE');
-        $dbPassword = getenv('MYSQL_PASSWORD');
+        $dbPassword = getenv('MYSQL_ROOT_PASSWORD');
         $conn = new PDO(
             sprintf('mysql:host=%s;dbname=%s', $dbHost, $dbName),
             'root',

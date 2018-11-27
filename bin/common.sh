@@ -143,11 +143,11 @@ function exec_cmd() {
 }
 
 function curl_check () {
-  echo "Checking for curl..."
+  print_status "Checking for curl..."
   if command -v curl > /dev/null; then
-    echo "Detected curl..."
+    print_status "Detected curl..."
   else
-    echo "Installing curl..."
+    print_status "Installing curl..."
     sudo apt-get install -q -y curl
     if [ "$?" -ne "0" ]; then
       echo "Unable to install curl! Your base system has a problem; please check your default OS's package repositories because curl should work."
@@ -162,7 +162,7 @@ function calculate_time_run_command() {
     $1
     END=$(date +%s)
     DIFF=$(( $END - $START ))
-    echo "+ ${1}: It took $DIFF seconds"
+    print_status "+ ${1}: It took $DIFF seconds"
 }
 
 function main() {

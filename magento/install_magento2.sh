@@ -1,13 +1,13 @@
 #!/bin/bash
 tar xvf magento.tar.gz &> /dev/null
-chmod -R 777 ./
+chmod -R 777 .
 # wait for database
 php mysql.php
 # Install magento
 php bin/magento setup:install --use-rewrites=1 \
     --db-host=$MYSQL_HOST \
     --db-name=$MYSQL_DATABASE \
-    --db-password=$MYSQL_PASSWORD \
+    --db-password=$MYSQL_ROOT_PASSWORD \
     --admin-firstname=$MAGENTO_ADMIN_FIRSTNAME \
     --admin-lastname=$MAGENTO_ADMIN_LASTNAME \
     --admin-email=$MAGENTO_ADMIN_EMAIL \

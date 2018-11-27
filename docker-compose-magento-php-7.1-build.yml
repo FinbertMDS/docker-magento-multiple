@@ -1,22 +1,16 @@
 version: '3'
 
 services:
-  magento22671:
+  php71:
     build:
       context: ./magento
       dockerfile: Dockerfile_7.1
-    container_name: docker-magento-multiple_magento:php71
     ports:
-      - 22671:80
+      - 19310:80
     depends_on:
       - db
-    environment:
-      - MAGENTO_URL=http://magento22671.com:22671/
-      - MYSQL_DATABASE=magento22671
     env_file:
       - .env
-    volumes:
-      - ./src/2.2.6:/var/www/html
     networks:
       webnet:
 networks:
