@@ -1,5 +1,5 @@
 .idea/
 src/
 data/mysql/
-init_data/
-init.sql
+data/init_data/
+data/prepare_data/database.sql

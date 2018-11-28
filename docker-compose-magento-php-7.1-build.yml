@@ -5,12 +5,6 @@ services:
     build:
       context: ./magento
       dockerfile: Dockerfile_7.1
-    ports:
-      - 19310:80
-    depends_on:
-      - db
-    env_file:
-      - .env
     networks:
       webnet:
 networks:

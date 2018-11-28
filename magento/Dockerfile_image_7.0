@@ -1,4 +1,4 @@
-FROM ngovanhuy0241/docker-magento-multiple_magento:php56
+FROM ngovanhuy0241/docker-magento-multiple-magento:php70
 
 # Fix permission denied of execute files
 RUN chmod +x /usr/local/bin/docker-php-entrypoint

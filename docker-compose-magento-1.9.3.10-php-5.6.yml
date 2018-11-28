@@ -4,7 +4,7 @@ services:
   magento19310:
     build:
       context: ./magento
-      dockerfile: Dockerfile_5.6
+      dockerfile: Dockerfile_image_5.6
     container_name: docker-magento-multiple_magento_1.9.3.10_5.6_1
     ports:
       - 19310:80

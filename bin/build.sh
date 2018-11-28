@@ -2,10 +2,10 @@
 
 source bin/common.sh
 
-# init file data/prepare_data/init.sql dynamic by magento version
+# init file data/prepare_data/database.sql dynamic by magento version
 function create_file_init_database_mysql() {
-    print_status 'Init file data/prepare_data/init.sql...'
-    INIT_DATABASE_FILE='data/prepare_data/init.sql'
+    print_status 'Init file data/prepare_data/database.sql...'
+    INIT_DATABASE_FILE='data/prepare_data/database.sql'
     rm -f ${INIT_DATABASE_FILE}
     touch ${INIT_DATABASE_FILE}
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
@@ -21,7 +21,7 @@ function create_file_init_database_mysql() {
 function remove_persist_data() {
     print_status "Remove persist data..."
     rm -rf data/init_data
-    sudo rm -rf data/mysql
+#    sudo rm -rf data/mysql
     sudo rm -rf src/*
     print_done
 }
@@ -45,7 +45,7 @@ function import_data_mysql() {
     MYSQL_INIT_DATA_FOLDER='data/init_data/'
     mkdir -p ${MYSQL_INIT_DATA_FOLDER}
 
-    cp 'data/prepare_data/init.sql' ${MYSQL_INIT_DATA_FOLDER}'init.sql'
+    cp 'data/prepare_data/database.sql' ${MYSQL_INIT_DATA_FOLDER}'database.sql'
 
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do

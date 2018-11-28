@@ -32,7 +32,7 @@
                     env_file:
                       - .env
                     volumes:
-                      - ./src/2.1.15:/var/www/html
+                      - ./src/2115:/var/www/html
                     networks:
                       webnet:
                 networks:

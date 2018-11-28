@@ -20,19 +20,3 @@ RUN apt-get update && apt-get install -y \
 # Enable apache modes
 RUN a2enmod rewrite
 RUN a2enmod headers
-
-
-# Fix permission denied of execute files
-RUN chmod +x /usr/local/bin/docker-php-entrypoint
-
-# Expose ports
-EXPOSE 80 443
-
-# Back
-COPY run-apache /usr/local/bin/
-RUN chmod +x /usr/local/bin/run-apache
-
-COPY conf/php.ini /usr/local/etc/php/conf.d/
-
-CMD ["run-apache"]
-WORKDIR /var/www/html
