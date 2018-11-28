@@ -7,40 +7,40 @@ if [[ ! ${MAGENTO_EDITION} = 'CE' ]]; then
 fi
 
 function get_magento_sample_data_download_url() {
-    MAGENTO_SAMPLE_DATA_DOWNLOAD_URL='https://nchc.dl.sourceforge.net/project/mageloads/assets/'${1}'/magento-sample-data-'${1}'.tar.gz'
+    magento_sample_data_download_url='https://nchc.dl.sourceforge.net/project/mageloads/assets/'${1}'/magento-sample-data-'${1}'.tar.gz'
 
     if [[ ${1} = '1.9.2.4' ]]; then
-        MAGENTO_SAMPLE_DATA_DOWNLOAD_URL='https://nchc.dl.sourceforge.net/project/mageloads/assets/1.9.2.4/magento-sample-data-1.9.2.4-fix.tar.gz'
+        magento_sample_data_download_url='https://nchc.dl.sourceforge.net/project/mageloads/assets/1.9.2.4/magento-sample-data-1.9.2.4-fix.tar.gz'
     fi
-    echo ${MAGENTO_SAMPLE_DATA_DOWNLOAD_URL}
+    echo ${magento_sample_data_download_url}
 }
 
 function download_magento1() {
-    MAGENTO_DOWNLOAD_URL='http://pubfiles.nexcess.net/magento/ce-packages/magento-'${1}'.tar.gz'
-    MAGENTO_SAMPLE_DATA_VERSION=`get_version_sample_data_magento1 ${1}`
-    MAGENTO_SAMPLE_DATA_DOWNLOAD_URL=`get_magento_sample_data_download_url ${MAGENTO_SAMPLE_DATA_VERSION}`
+    magento_download_url='http://pubfiles.nexcess.net/magento/ce-packages/magento-'${1}'.tar.gz'
+    magento_sample_data_version=`get_version_sample_data_magento1 ${1}`
+    magento_sample_data_download_url=`get_magento_sample_data_download_url ${magento_sample_data_version}`
 
-    local MAGENTO_FILENAME='magento/magento1-'${1}'.tar.gz'
-    local MAGENTO_SAMPLE_FILENAME='magento/magento1-sample-data-'${MAGENTO_SAMPLE_DATA_VERSION}'.tar.gz'
-    if [[ ! -f  ${MAGENTO_FILENAME} ]]; then
-        wget -O ${MAGENTO_FILENAME} ${MAGENTO_DOWNLOAD_URL}
+    local magento_filename='magento/magento1-'${1}'.tar.gz'
+    local magento_sample_filename='magento/magento1-sample-data-'${magento_sample_data_version}'.tar.gz'
+    if [[ ! -f  ${magento_filename} ]]; then
+        wget -O ${magento_filename} ${magento_download_url}
     fi
-    if [[ ! -f  ${MAGENTO_SAMPLE_FILENAME} ]]; then
+    if [[ ! -f  ${magento_sample_filename} ]]; then
         if [[ ${SAMPLE_DATA} = '1' ]]; then
-                wget -O ${MAGENTO_SAMPLE_FILENAME} ${MAGENTO_SAMPLE_DATA_DOWNLOAD_URL}
+                wget -O ${magento_sample_filename} ${magento_sample_data_download_url}
         fi
     fi
 }
 
 function download_magento2() {
-    local MAGENTO_DOWNLOAD_URL='http://pubfiles.nexcess.net/magento/ce-packages/magento2-'${1}'.tar.gz'
+    local magento_download_url='http://pubfiles.nexcess.net/magento/ce-packages/magento2-'${1}'.tar.gz'
     if [[ ${SAMPLE_DATA} = '1' ]]; then
-        MAGENTO_DOWNLOAD_URL='http://pubfiles.nexcess.net/magento/ce-packages/magento2-with-samples-'${1}'.tar.gz'
+        magento_download_url='http://pubfiles.nexcess.net/magento/ce-packages/magento2-with-samples-'${1}'.tar.gz'
     fi
 
-    local MAGENTO_FILENAME='magento/magento2-'${1}'.tar.gz'
-    if [[ ! -f  ${MAGENTO_FILENAME} ]]; then
-        wget -O ${MAGENTO_FILENAME} ${MAGENTO_DOWNLOAD_URL}
+    local magento_filename='magento/magento2-'${1}'.tar.gz'
+    if [[ ! -f  ${magento_filename} ]]; then
+        wget -O ${magento_filename} ${magento_download_url}
     fi
 }
 

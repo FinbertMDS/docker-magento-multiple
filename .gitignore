@@ -2,4 +2,5 @@
 src/
 data/mysql/
 data/init_data/
-data/prepare_data/database.sql
+database.sql
+*.tar.gz

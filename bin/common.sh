@@ -158,11 +158,11 @@ function curl_check () {
 }
 
 function calculate_time_run_command() {
-    START=$(date +%s)
+    start=$(date +%s)
     $1
-    END=$(date +%s)
-    DIFF=$(( $END - $START ))
-    print_status "+ ${1}: It took $DIFF seconds"
+    end=$(date +%s)
+    diff=$(( $end - $start ))
+    print_status "+ ${1}: It took $diff seconds"
 }
 
 function main() {
