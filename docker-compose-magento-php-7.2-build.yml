@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  php72:
+    build:
+      context: ./magento
+      dockerfile: Dockerfile_7.2
+    networks:
+      webnet:
+networks:
+  webnet:

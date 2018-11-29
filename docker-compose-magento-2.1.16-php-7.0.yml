@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  magento21167:
+    build:
+      context: ./magento
+      dockerfile: Dockerfile_image_7.0
+    container_name: docker-magento-multiple_magento_2.1.16_7.0_1
+    ports:
+      - 21167:80
+    depends_on:
+      - db
+    environment:
+      MAGENTO_URL: http://magento21167.com:21167/
+      MYSQL_DATABASE: magento21167
+    env_file:
+      - .env
+    volumes:
+      - ./src/2116:/var/www/html
+    networks:
+      webnet:
+networks:
+  webnet:

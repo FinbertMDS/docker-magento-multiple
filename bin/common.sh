@@ -6,7 +6,9 @@ MAGENTO_VERSION_ARRAY=(${MAGENTO_VERSIONES//,/ })
 # get version php from version magento
 function get_version_php() {
     PHP_VERSION=""
-    if [[ ${1} == 2.2* ]]; then
+    if [[ ${1} == 2.3* ]]; then
+        PHP_VERSION="7.2"
+    elif [[ ${1} == 2.2* ]]; then
         PHP_VERSION="7.1"
     elif [[ ${1} == 2.1* ]]; then
         PHP_VERSION="7.0"
@@ -165,8 +167,19 @@ function calculate_time_run_command() {
     print_status "+ ${1}: It took $diff seconds"
 }
 
-function main() {
-    curl_check
+function exit_print_error() {
+    echo $1
+    exit
 }
 
-main
+function print_site_magento_list() {
+    print_status "Site magento list:"
+    for i in "${MAGENTO_VERSION_ARRAY[@]}"
+    do
+        local port_service_docker=`get_port_service_docker "${i}"`
+        echo
+        echo "Magento version ${i}"
+        echo "Frontend: http://magento${port_service_docker}.com:${port_service_docker}/"
+        echo "Backend: http://magento${port_service_docker}.com:${port_service_docker}/admin"
+    done
+}

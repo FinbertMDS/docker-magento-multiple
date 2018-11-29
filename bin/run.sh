@@ -59,19 +59,8 @@ function add_host_to_local() {
     print_done
 }
 
-function print_site_magento_list() {
-    print_status "Site magento list:"
-    for i in "${MAGENTO_VERSION_ARRAY[@]}"
-    do
-        local port_service_docker=`get_port_service_docker "${i}"`
-        echo
-        echo "Magento version ${i}"
-        echo "Frontend: http://magento${port_service_docker}.com:${port_service_docker}/"
-        echo "Backend: http://magento${port_service_docker}.com:${port_service_docker}/admin"
-    done
-}
-
 function main() {
+    curl_check
     run_docker
     run_sql_init_database
     install_magento_for_all_containers

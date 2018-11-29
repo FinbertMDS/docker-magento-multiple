@@ -24,6 +24,7 @@ php bin/magento setup:install --use-rewrites=1 \
 # Update config for testing
 php bin/magento config:set cms/wysiwyg/enabled disabled
 php bin/magento config:set admin/security/admin_account_sharing 1
+php bin/magento config:set admin/security/session_lifetime 31536000
 php bin/magento config:set admin/captcha/enable 0
 
 php bin/magento deploy:mode:set developer
