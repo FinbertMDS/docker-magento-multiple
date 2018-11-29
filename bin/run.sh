@@ -15,25 +15,6 @@ function run_sql_init_database() {
     exec_cmd "docker exec ${docker_container_name_db} bash -c 'mysql -u root --password=${MYSQL_ROOT_PASSWORD} < docker-entrypoint-initdb.d/database.sql'"
 }
 
-function wait_service_docker_start_done() {
-    local port_service_docker=`get_port_service_docker "${1}"`
-    if [[ ! -z "${port_service_docker}" ]]; then
-        while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' 127.0.0.1:"${port_service_docker}")" != "200" ]];
-        do
-            echo "waiting service start at port "${port_service_docker}" ..."
-            sleep 3
-        done
-        echo 'start service docker at port '${port_service_docker}' done!'
-    fi
-}
-
-function wait_for_all_service_start_done() {
-    for i in "${MAGENTO_VERSION_ARRAY[@]}"
-    do
-        wait_service_docker_start_done ${i}
-    done
-}
-
 function install_magento() {
     local php_version=`get_version_php ${1}`
     if [[ ! -z ${php_version} ]]; then
