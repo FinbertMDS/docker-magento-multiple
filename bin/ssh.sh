@@ -4,7 +4,7 @@ source bin/common.sh
 
 CONTAINER_NAME_LIST=()
 USER_LIST=('root', 'www-data')
-USER='root'
+USER='www-data'
 
 function validate_ssh() {
     if [[ -z ${1} ]]; then
@@ -33,6 +33,7 @@ function remote_container() {
         docker exec -it -u ${USER} ${docker_container_name} bash
     fi
     if [[ $1 = 'db' ]]; then
+        echo 'Docker container name: docker-magento-multiple_db_1'
         docker exec -it -u root docker-magento-multiple_db_1 bash
     fi
 }
@@ -44,6 +45,8 @@ function main() {
     if [[ ! ${ssh_name} = 'db' ]]; then
         echo 'Param 2 is one of value: root,www-data'
         read user_name
+    else
+        user_name='root'
     fi
     validate_ssh ${ssh_name}
     validate_user_remote ${user_name}
