@@ -135,7 +135,7 @@ function main() {
     init_folder_persist_data_docker
     prepare_init_database_sql
 #    # use when build image ngovanhuy0241/docker-magento-multiple-db
-#    prepare_sql_import_db
+    prepare_sql_import_db
     copy_file_install_magento
     prepare_docker_compose_file
     build_docker

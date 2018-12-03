@@ -2,8 +2,8 @@ version: '3'
 
 services:
   db:
-#    build: ./data
-    image: ngovanhuy0241/docker-magento-multiple-db
+    build: ./data
+#    image: ngovanhuy0241/docker-magento-multiple-db
     container_name: docker-magento-multiple_db_1
 #    volumes:
 #      - ./data/mysql:/var/lib/mysql
