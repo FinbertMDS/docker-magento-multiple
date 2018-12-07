@@ -1,27 +1,30 @@
-# Docker compose for Magento 2 with multiple version.
+# Docker compose for Magento 1 and 2 with multiple version.
 
-## Build Docker Magento 2
-1. Prepare
-    - How to add version magento to install
-        1. If you want install multiple version magento to, you add version magento to variable `MAGENTO_VERSIONES` in file `.env` with format `version1,version2`.
-            ```text
-            MAGENTO_VERSIONES='2.1.1.15,2.2.6'
-            ```
-        2. Then, you must add copy file `docker-compose-magento-2.2.6-php-7.1.yml` to version corresponding: example `docker-compose-magento-2.1.15-php-7.0.yml`. 
-            
-        Note: 
-            - File docker compose name with format: `docker-compose-magento-versionMagento-php-versionPhp.yml` 
-    - Download source Magento
-        ```bash
-        ./bin/downloadMagento.sh
-        ```
-2. Build images
-    ```bash
-    ./bin/build.sh
+## Build Docker Magento
+1. If you want install multiple version magento to, you add version magento to variable `MAGENTO_VERSIONES` in file `.env` with format `version1,version2`.
+    ```text
+    MAGENTO_VERSIONES='2.2.7,2.3.0'
     ```
-3. Run service
+    
+    - Note: If you only install a version Magento: example `2.3.0` and you want install more quicker than, you can change file `docker-compose.yml` at `services` -> `db` from:
+        ```text
+          db:
+            build: ./data
+        #    image: ngovanhuy0241/docker-magento-multiple-db
+            container_name: docker-magento-multiple_db_1
+        ```
+        
+        to
+        
+        ```text
+          db:
+        #    build: ./data
+            image: ngovanhuy0241/docker-magento-multiple-db:2.3.0
+            container_name: docker-magento-multiple_db_1
+        ``` 
+2. Run command to install Magento
     ```bash
-    ./bin/run.sh #Run containers in the background, print new container names
+    ./bin/main.sh
     ```
 
 ## Some bash in folder bin
