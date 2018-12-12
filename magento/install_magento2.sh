@@ -1,4 +1,6 @@
 #!/bin/bash
+chmod -R 777 ../html
+chowm -R www-data:www-data ../html
 tar xvf magento.tar.gz &> /dev/null
 chmod -R 777 .
 # wait for database

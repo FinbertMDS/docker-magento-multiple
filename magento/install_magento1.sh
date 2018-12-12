@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+chmod -R 777 ../html
+chowm -R www-data:www-data ../html
 tar xvf magento.tar.gz &> /dev/null
 rsync -av magento/ . &> /dev/null
 rm -rf magento/
