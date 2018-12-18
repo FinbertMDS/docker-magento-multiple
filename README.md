@@ -79,6 +79,7 @@
             source ./bin/common.sh && print_site_magento_list
             ```
     - Phpmyadmin: http://localhost:2122/
+    - MailHog: http://localhost:8025/
 - Source:
     - Download Magento 2: http://pubfiles.nexcess.net/magento/ce-packages/
     
