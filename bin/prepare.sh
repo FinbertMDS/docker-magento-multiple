@@ -2,6 +2,15 @@
 
 source bin/common.sh
 
+function prepare_environment_for_once_version_magento() {
+    if [[ ${#MAGENTO_VERSION_ARRAY[@]} = 1 ]]; then
+        if [[ -f docker-compose.yml ]]; then
+            local line_number_image_name_db=`awk '/# image_name_db/{ print NR; exit }' docker-compose.yml`
+            exec_cmd "sed -i '${line_number_image_name_db}s/.*/    image: ngovanhuy0241\/docker-magento-multiple-db:${MAGENTO_VERSION_ARRAY[0]} # image_name_db/' docker-compose.yml"
+        fi
+    fi
+}
+
 # init file data/prepare_data/database.sql dynamic by magento version
 function prepare_init_database_sql() {
     print_status 'Init file data/init_data/database.sql...'
@@ -124,6 +133,7 @@ EOL
 }
 
 function main() {
+    prepare_environment_for_once_version_magento
     remove_persist_data
     init_folder_persist_data_docker
     prepare_init_database_sql

@@ -22,6 +22,8 @@
             image: ngovanhuy0241/docker-magento-multiple-db:2.3.0
             container_name: docker-magento-multiple_db_1
         ``` 
+        
+        This above had include in bash script `bin/prepare` function `prepare_environment_for_once_version_magento`. You only need change version on file `.env` environment `MAGENTO_VERSIONES` with once version magento. 
 2. Run command to install Magento
     ```bash
     ./bin/main.sh
