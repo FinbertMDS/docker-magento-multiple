@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source bin/common.sh
+
 function main() {
     source bin/download_magento.sh
     source bin/prepare.sh

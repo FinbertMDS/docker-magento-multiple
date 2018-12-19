@@ -6,7 +6,9 @@ function prepare_environment_for_once_version_magento() {
     if [[ ${#MAGENTO_VERSION_ARRAY[@]} = 1 ]]; then
         if [[ -f docker-compose.yml ]]; then
             local line_number_image_name_db=`awk '/# image_name_db/{ print NR; exit }' docker-compose.yml`
-            exec_cmd "sed -i '${line_number_image_name_db}s/.*/    image: ngovanhuy0241\/docker-magento-multiple-db:${MAGENTO_VERSION_ARRAY[0]} # image_name_db/' docker-compose.yml"
+            if [[ ! -z ${line_number_image_name_db} ]]; then
+                exec_cmd "sed -i '${line_number_image_name_db}s/.*/    image: ngovanhuy0241\/docker-magento-multiple-db:${MAGENTO_VERSION_ARRAY[0]} # image_name_db/' docker-compose.yml"
+            fi
         fi
     fi
 }
@@ -134,13 +136,13 @@ EOL
 
 function main() {
     prepare_environment_for_once_version_magento
-    remove_persist_data
-    init_folder_persist_data_docker
-    prepare_init_database_sql
-    # use when build image ngovanhuy0241/docker-magento-multiple-db
-    prepare_sql_import_db
-    copy_file_install_magento
-    prepare_docker_compose_file
+#    remove_persist_data
+#    init_folder_persist_data_docker
+#    prepare_init_database_sql
+#    # use when build image ngovanhuy0241/docker-magento-multiple-db
+#    prepare_sql_import_db
+#    copy_file_install_magento
+#    prepare_docker_compose_file
 }
 
 calculate_time_run_command main

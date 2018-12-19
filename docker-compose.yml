@@ -2,8 +2,8 @@ version: '3'
 
 services:
   db:
-    build: ./data
-#    image: ngovanhuy0241/docker-magento-multiple-db
+#    build: ./data
+    image: ngovanhuy0241/docker-magento-multiple-db:2.1.16_2.2.6_2.2.7_2.3.0 # image_name_db
     container_name: docker-magento-multiple_db_1
 #    volumes:
 #      - ./data/mysql:/var/lib/mysql
@@ -26,8 +26,8 @@ services:
   mailhog:
     image: mailhog/mailhog
     ports:
-      - "1025:1025"
-      - "8025:8025"
+      - 1025:1025
+      - 8025:8025
     networks:
       - webnet
 networks:
