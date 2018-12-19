@@ -46,8 +46,13 @@ RUN chmod +x /usr/local/bin/run-apache
 
 COPY conf/php.ini /usr/local/etc/php/conf.d/
 
+# Composer install
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN chmod +x /usr/local/bin/composer
+
+# Composer authentication magento
+RUN mkdir -p /var/www/.composer
+COPY auth.json /var/www/.composer/auth.json
 
 CMD ["run-apache"]
 WORKDIR /var/www/html

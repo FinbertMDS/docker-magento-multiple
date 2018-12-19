@@ -41,9 +41,9 @@
 9. `bin/ssh.sh`: Ssh to docker container what containers contain magento and contain database.
 10. `bin/backup_database.sh`: Backup all databases which not backup before now to file.
 
-# Build image to [Docker Hub](https://hub.docker.com)
-## ngovanhuy0241/docker-magento-multiple-magento
-- With version new of PHP. 7.2
+## Build image to [Docker Hub](https://hub.docker.com)
+### ngovanhuy0241/docker-magento-multiple-magento
+- With version new of PHP 7.2
     1. Create file `docker-compose-magento-php-7.2-build.yml`
     2. Create file `magento/Dockerfile_7.2`
     3. Create file `magento/Dockerfile_image_7.2`
@@ -58,7 +58,7 @@
         docker push ngovanhuy0241/docker-magento-multiple-magento:php72
         ```
 
-## ngovanhuy0241/docker-magento-multiple-db
+### ngovanhuy0241/docker-magento-multiple-db
 1. https://github.com/FinbertMagestore/docker-magento-multiple-db/tree/develop
 
 ## Note
@@ -83,5 +83,4 @@
     - Phpmyadmin: http://localhost:2122/
     - MailHog: http://localhost:8025/
 - Source:
-    - Download Magento 2: http://pubfiles.nexcess.net/magento/ce-packages/
-    
+    - Download Magento 2: http://pubfiles.nexcess.net/magento/ce-packages/    
