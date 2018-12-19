@@ -55,14 +55,15 @@ function init_folder_persist_data_docker() {
 function prepare_sql_import_db() {
     print_status "Init sql to import to databases..."
     mysql_init_data_folder='data/init_data/'
-
-    for i in "${MAGENTO_VERSION_ARRAY[@]}"
-    do
-        local mysql_filename='data/prepare_data/'${i}'.sql'
-        if [[ -f ${mysql_filename} ]]; then
-            cp ${mysql_filename} ${mysql_init_data_folder}${i}'.sql'
-        fi
-    done
+    if [[ ${#MAGENTO_VERSION_ARRAY[@]} != 1 ]]; then
+        for i in "${MAGENTO_VERSION_ARRAY[@]}"
+        do
+            local mysql_filename='data/prepare_data/'${i}'.sql'
+            if [[ -f ${mysql_filename} ]]; then
+                cp ${mysql_filename} ${mysql_init_data_folder}${i}'.sql'
+            fi
+        done
+    fi
     print_done
 }
 
@@ -136,13 +137,13 @@ EOL
 
 function main() {
     prepare_environment_for_once_version_magento
-#    remove_persist_data
-#    init_folder_persist_data_docker
-#    prepare_init_database_sql
-#    # use when build image ngovanhuy0241/docker-magento-multiple-db
-#    prepare_sql_import_db
-#    copy_file_install_magento
-#    prepare_docker_compose_file
+    remove_persist_data
+    init_folder_persist_data_docker
+    prepare_init_database_sql
+    # use when build image ngovanhuy0241/docker-magento-multiple-db
+    prepare_sql_import_db
+    copy_file_install_magento
+    prepare_docker_compose_file
 }
 
 calculate_time_run_command main
