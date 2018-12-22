@@ -19,5 +19,20 @@ services:
       - ./src/230:/var/www/html
     networks:
       webnet:
+
+  varnish:
+    build: ./varnish
+    ports:
+      - 80:80
+      - 6082:6082
+    volumes:
+      - ./varnish/230.default.vcl:/etc/varnish/default.vcl
+    depends_on:
+      - magento23072
+    links:
+      - magento23072
+    networks:
+      webnet:
+
 networks:
   webnet:

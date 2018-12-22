@@ -1,5 +1,13 @@
 # Docker compose for Magento 1 and 2 with multiple version.
 
+## Docker Compose with
+- Database
+    - MariaDb
+    - Phpmyadmin
+- Web server: Apache2, Php
+- Mailhog
+- Varnish
+
 ## Build Docker Magento
 1. If you want install multiple version magento to, you add version magento to variable `MAGENTO_VERSIONES` in file `.env` with format `version1,version2`.
     ```text
@@ -58,11 +66,22 @@
         docker push ngovanhuy0241/docker-magento-multiple-magento:php72
         ```
 
-### ngovanhuy0241/docker-magento-multiple-db
-1. https://github.com/FinbertMagestore/docker-magento-multiple-db/tree/develop
-
+### Docker Images
+1. [ngovanhuy0241/docker-magento-multiple-db](https://hub.docker.com/r/ngovanhuy0241/docker-magento-multiple-db/)
+    - [Github](https://github.com/FinbertMagestore/docker-magento-multiple-db/tree/develop)
+2. [ngovanhuy0241/docker-magento-multiple-magento](https://hub.docker.com/r/ngovanhuy0241/docker-magento-multiple-magento)
+    - [Github](https://github.com/FinbertMagestore/docker-magento-multiple/tree/develop/magento)
+    - Docker file:
+        - Dockerfile_5.6
+        - Dockerfile_7.0
+        - Dockerfile_7.1
+        - Dockerfile_7.2
+3. [ngovanhuy0241/docker-magento-multiple-varnish](https://hub.docker.com/r/ngovanhuy0241/docker-magento-multiple-varnish)
+    - [Github](https://github.com/FinbertMagestore/docker-magento-multiple/tree/develop/varnish)
 ## Note
 - Docker: MariaDb, Phpmyadmin
+    - Magento 2.3.x
+        - 2.3.0
     - Magento 2.2.x
         - 2.2.1
         - 2.2.6
@@ -84,3 +103,37 @@
     - MailHog: http://localhost:8025/
 - Source:
     - Download Magento 2: http://pubfiles.nexcess.net/magento/ce-packages/    
+- Config varnish
+    - Note: Localhost must not use port 80
+    - With a version magento example: 2.3.0
+        - You copy file `varnish/template.default.vcl` to `varnish/2.3.0.default.vcl` and then change info `backend default` (host and port) to
+            ```text
+            backend default {
+                .host = "magento23072";
+                .port = "22671";
+                .first_byte_timeout = 600s;
+                .probe = {
+                    .url = "/pub/health_check.php";
+                    .timeout = 2s;
+                    .interval = 5s;
+                    .window = 10;
+                    .threshold = 5;
+               }
+            }
+            ```
+        - You add `varnish` to file `docker-compose-magento-2.3.0-php-7.2.yml`
+            ```text
+            varnish:
+                build: ./varnish
+                ports:
+                  - 80:80
+                  - 6082:6082
+                volumes:
+                  - ./varnish/230.default.vcl:/etc/varnish/default.vcl
+                depends_on:
+                  - magento23072
+                links:
+                  - magento23072
+                networks:
+                  webnet:
+            ```

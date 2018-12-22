@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source bin/common.sh
+
 function build_docker() {
     print_status "Building docker..."
     local docker_build_command=`get_docker_command "build "`
