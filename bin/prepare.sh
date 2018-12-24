@@ -103,7 +103,7 @@ function prepare_docker_compose_file() {
     do
         local php_version=`get_version_php "${i}"`
         local port_service_docker=`get_port_service_docker "${i}"`
-        docker_compose_file='docker-compose-magento-'${i}'-php-'${php_version}'.yml'
+        docker_compose_file='docker-compose-files/docker-compose-magento-'${i}'-php-'${php_version}'.yml'
         if [[ ! -f ${docker_compose_file} ]]; then
 cat >${docker_compose_file} <<EOL
 version: '3'
@@ -131,7 +131,7 @@ networks:
   webnet:
 EOL
         fi
-
+        cp ${docker_compose_file} .
     done
 }
 

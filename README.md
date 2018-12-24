@@ -126,7 +126,6 @@
             varnish:
                 build: ./varnish
                 ports:
-                  - 80:80
                   - 6082:6082
                 volumes:
                   - ./varnish/230.default.vcl:/etc/varnish/default.vcl
