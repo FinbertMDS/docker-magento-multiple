@@ -19,6 +19,12 @@ function install_magento() {
     local php_version=`get_version_php ${1}`
     if [[ ! -z ${php_version} ]]; then
         local docker_container_name="docker-magento-multiple_magento_"${1}"_"${php_version}"_1"
+        local magento_version=`get_version_magento ${1}`
+        if [[ ${magento_version} = '2' ]]; then
+#            exec_cmd 'docker exec '${docker_container_name}' bash -c "apt-get update"'
+#            exec_cmd 'docker exec '${docker_container_name}' bash -c "apt install -y cron"'
+            exec_cmd 'docker exec '${docker_container_name}' bash -c "service cron start"'
+        fi
         docker exec ${docker_container_name} bash -c "chown -R www-data:www-data .. && chmod -R 777 .."
         docker exec -u www-data ${docker_container_name} bash -c "./install_magento.sh"
     fi

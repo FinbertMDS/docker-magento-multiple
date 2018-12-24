@@ -31,3 +31,6 @@ php bin/magento config:set admin/captcha/enable 0
 
 php bin/magento deploy:mode:set developer
 php bin/magento setup:static-content:deploy -f
+
+# Setup cron
+php bin/magento cron:install --force
