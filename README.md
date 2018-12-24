@@ -7,6 +7,7 @@
 - Web server: Apache2, Php
 - Mailhog
 - Varnish
+- Cron
 
 ## Build Docker Magento
 1. If you want install multiple version magento to, you add version magento to variable `MAGENTO_VERSIONES` in file `.env` with format `version1,version2`.
