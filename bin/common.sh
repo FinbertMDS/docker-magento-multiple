@@ -179,7 +179,7 @@ function print_site_magento_list() {
         local port_service_docker=`get_port_service_docker "${i}"`
         echo
         echo "Magento version ${i}"
-        echo "Frontend: http://magento${port_service_docker}.com:${port_service_docker}/"
-        echo "Backend: http://magento${port_service_docker}.com:${port_service_docker}/admin"
+        echo "Frontend: http://magento${port_service_docker}.com/"
+        echo "Backend: http://magento${port_service_docker}.com/admin"
     done
 }

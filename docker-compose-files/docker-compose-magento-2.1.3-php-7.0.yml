@@ -11,7 +11,7 @@ services:
     depends_on:
       - db
     environment:
-      MAGENTO_URL: http://magento21370.com:21370/
+      MAGENTO_URL: http://magento21370.com/
       MYSQL_DATABASE: magento21370
     env_file:
       - .env

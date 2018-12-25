@@ -40,11 +40,13 @@ function remote_container() {
 
 function main() {
     echo 'Param 1 is one of the some value to remote: '${MAGENTO_VERSIONES}',db'
-    read ssh_name
+#    read ssh_name
+    ssh_name=${1}
     user_name=''
     if [[ ! ${ssh_name} = 'db' ]]; then
         echo 'Param 2 is one of value: root,www-data'
-        read user_name
+#        read user_name
+        user_name=${2}
     else
         user_name='root'
     fi
@@ -53,4 +55,4 @@ function main() {
     remote_container ${ssh_name}
 }
 
-main
+main $1 $2

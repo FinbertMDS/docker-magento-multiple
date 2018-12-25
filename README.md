@@ -8,6 +8,7 @@
 - Mailhog
 - Varnish
 - Cron
+- RabbitMQ
 
 ## Build Docker Magento
 1. If you want install multiple version magento to, you add version magento to variable `MAGENTO_VERSIONES` in file `.env` with format `version1,version2`.
@@ -105,7 +106,6 @@
 - Source:
     - Download Magento 2: http://pubfiles.nexcess.net/magento/ce-packages/    
 - Config varnish
-    - Note: Localhost must not use port 80
     - With a version magento example: 2.3.0
         - You copy file `varnish/template.default.vcl` to `varnish/2.3.0.default.vcl` and then change info `backend default` (host and port) to
             ```text
@@ -137,3 +137,23 @@
                 networks:
                   webnet:
             ```
+- Install Nginx at Local as Proxy Server
+    - Configuration Nginx
+        ```text
+        upstream magento23072 {
+            server 127.0.0.1:23072 weight=1;
+        }
+        
+        server {
+            listen 80;
+            server_name magento23072.com;
+        
+            location / {
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_pass http://magento23072 ;
+            }
+        }
+        ```

@@ -103,7 +103,7 @@ function prepare_docker_compose_file() {
     do
         local php_version=`get_version_php "${i}"`
         local port_service_docker=`get_port_service_docker "${i}"`
-        docker_compose_file='docker-compose-files/docker-compose-magento-'${i}'-php-'${php_version}'.yml'
+        local docker_compose_file='docker-compose-files/docker-compose-magento-'${i}'-php-'${php_version}'.yml'
         if [[ ! -f ${docker_compose_file} ]]; then
 cat >${docker_compose_file} <<EOL
 version: '3'
@@ -119,7 +119,7 @@ services:
     depends_on:
       - db
     environment:
-      MAGENTO_URL: http://magento${port_service_docker}.com:${port_service_docker}/
+      MAGENTO_URL: http://magento${port_service_docker}.com/
       MYSQL_DATABASE: magento${port_service_docker}
     env_file:
       - .env
@@ -135,6 +135,60 @@ EOL
     done
 }
 
+function install_nginx() {
+    if ! which nginx > /dev/null 2>&1; then
+        echo "Nginx installing ..."
+        sudo apt update
+        sudo apt install nginx -y
+        sudo ufw allow 'Nginx Full'
+        sudo service nginx restart
+    fi
+    echo "Nginx installed."
+}
+
+function prepare_nginx_config_file() {
+    for i in "${MAGENTO_VERSION_ARRAY[@]}"
+    do
+        local port_service_docker=`get_port_service_docker "${i}"`
+        local nginx_magento_config_file="nginx/${i}-nginx-magento2-docker"
+        if [[ ! -f ${nginx_magento_config_file} ]]; then
+cat >${nginx_magento_config_file} <<EOL
+upstream magento${port_service_docker} {
+    server 127.0.0.1:${port_service_docker} weight=1;
+}
+
+server {
+    listen 80;
+    server_name magento${port_service_docker}.com;
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_pass http://magento${port_service_docker} ;
+    }
+}
+EOL
+        fi
+    done
+}
+
+function copy_nginx_config_to_local() {
+    for i in "${MAGENTO_VERSION_ARRAY[@]}"
+    do
+        local nginx_magento_config_file_name="${i}-nginx-magento2-docker"
+        local nginx_magento_config_file_source="nginx/${i}-nginx-magento2-docker"
+        sudo rm -f "/etc/nginx/sites-available/${nginx_magento_config_file_name}"
+        sudo rm -f "/etc/nginx/sites-enabled/${nginx_magento_config_file_name}"
+        sudo cp ${nginx_magento_config_file_source} /etc/nginx/sites-available
+        if [[ ! -f /etc/nginx/sites-enabled/${nginx_magento_config_file_name} ]]; then
+            sudo ln -s /etc/nginx/sites-available/${nginx_magento_config_file_name} /etc/nginx/sites-enabled/
+        fi
+        sudo service nginx restart
+    done
+}
+
 function main() {
     prepare_environment_for_once_version_magento
     remove_persist_data
@@ -144,6 +198,9 @@ function main() {
     prepare_sql_import_db
     copy_file_install_magento
     prepare_docker_compose_file
+    install_nginx
+    prepare_nginx_config_file
+    copy_nginx_config_to_local
 }
 
 calculate_time_run_command main
