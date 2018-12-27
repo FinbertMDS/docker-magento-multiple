@@ -3,7 +3,6 @@
 source bin/common.sh
 
 function main() {
-    source bin/remove.sh
     source bin/download_magento.sh
     source bin/prepare.sh
     source bin/build.sh
