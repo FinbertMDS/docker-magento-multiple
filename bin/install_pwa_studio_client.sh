@@ -12,7 +12,13 @@ npm install
 
 cp packages/venia-concept/.env.dist packages/venia-concept/.env
 
-echo "Change value MAGENTO_BACKEND_URL in packages/venia-concept/.env"
+line_old='MAGENTO_BACKEND_URL="https://release-dev-rxvv2iq-zddsyhrdimyra.us-4.magentosite.cloud/"'
+line_new='MAGENTO_BACKEND_URL="http://magento23072.com/"'
+sed -i "s%$line_old%$line_new%g" packages/venia-concept/.env
+
+echo 'Change value MAGENTO_BACKEND_URL="http://magento23072.com/" in packages/venia-concept/.env'
+echo 'Build artifacts: npm run build'
+npm run build
 echo "Start server: npm run watch:venia"
-#npm run watch:venia
+npm run watch:venia
 
