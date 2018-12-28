@@ -20,9 +20,11 @@ function install_magento() {
     if [[ ! -z ${php_version} ]]; then
         local docker_container_name="docker-magento-multiple_magento_"${1}"_"${php_version}"_1"
         local magento_version=`get_version_magento ${1}`
-#        if [[ ${magento_version} = '2' ]]; then
-#            exec_cmd 'docker exec '${docker_container_name}' bash -c "service cron start"'
-#        fi
+        if [[ ${INSTALL_CRON} = '1' ]]; then
+            if [[ ${magento_version} = '2' ]]; then
+                exec_cmd 'docker exec '${docker_container_name}' bash -c "service cron start"'
+            fi
+        fi
         docker exec ${docker_container_name} bash -c "chown -R www-data:www-data .. && chmod -R 777 .."
         docker exec -u www-data ${docker_container_name} bash -c "./install_magento.sh"
         if [[ ${SAMPLE_DATA} = '0' ]]; then
