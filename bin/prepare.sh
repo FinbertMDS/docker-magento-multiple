@@ -16,7 +16,7 @@ function prepare_environment_for_once_version_magento() {
 # init file data/prepare_data/database.sql dynamic by magento version
 function prepare_init_database_sql() {
     print_status 'Init file data/init_data/database.sql...'
-    init_database_file='data/init_data/database.sql'
+    local init_database_file='data/init_data/database.sql'
     rm -f ${init_database_file}
     touch ${init_database_file}
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
@@ -54,7 +54,7 @@ function init_folder_persist_data_docker() {
 # prepare file mysql to import to database
 function prepare_sql_import_db() {
     print_status "Init sql to import to databases..."
-    mysql_init_data_folder='data/init_data/'
+    local mysql_init_data_folder='data/init_data/'
     if [[ ${#MAGENTO_VERSION_ARRAY[@]} != 1 ]]; then
         for i in "${MAGENTO_VERSION_ARRAY[@]}"
         do

@@ -3,8 +3,8 @@
 source bin/common.sh
 
 function removeDocker() {
-    local DOCKER_BUILD_COMMAND=`get_docker_command "down "`
-    exec_cmd "${DOCKER_BUILD_COMMAND}"
+    local docker_build_command=`get_docker_command "down "`
+    exec_cmd "${docker_build_command}"
 }
 
 function main() {

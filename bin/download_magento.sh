@@ -7,7 +7,7 @@ if [[ ! ${MAGENTO_EDITION} = 'CE' ]]; then
 fi
 
 function get_magento_sample_data_download_url() {
-    magento_sample_data_download_url='https://nchc.dl.sourceforge.net/project/mageloads/assets/'${1}'/magento-sample-data-'${1}'.tar.gz'
+    local magento_sample_data_download_url='https://nchc.dl.sourceforge.net/project/mageloads/assets/'${1}'/magento-sample-data-'${1}'.tar.gz'
 
     if [[ ${1} = '1.9.2.4' ]]; then
         magento_sample_data_download_url='https://nchc.dl.sourceforge.net/project/mageloads/assets/1.9.2.4/magento-sample-data-1.9.2.4-fix.tar.gz'
@@ -16,9 +16,9 @@ function get_magento_sample_data_download_url() {
 }
 
 function download_magento1() {
-    magento_download_url='http://pubfiles.nexcess.net/magento/ce-packages/magento-'${1}'.tar.gz'
-    magento_sample_data_version=`get_version_sample_data_magento1 ${1}`
-    magento_sample_data_download_url=`get_magento_sample_data_download_url ${magento_sample_data_version}`
+    local magento_download_url='http://pubfiles.nexcess.net/magento/ce-packages/magento-'${1}'.tar.gz'
+    local magento_sample_data_version=`get_version_sample_data_magento1 ${1}`
+    local magento_sample_data_download_url=`get_magento_sample_data_download_url ${magento_sample_data_version}`
 
     local magento_filename='magento/magento1-'${1}'.tar.gz'
     local magento_sample_filename='magento/magento1-sample-data-'${magento_sample_data_version}'.tar.gz'

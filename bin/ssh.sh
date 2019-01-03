@@ -19,7 +19,7 @@ function validate_user_remote() {
     if [[ ! -z $1 ]]; then
         USER=$1
     fi
-    match=$(echo "${USER_LIST[@]:0}" | grep -o ${USER})
+    local match=$(echo "${USER_LIST[@]:0}" | grep -o ${USER})
     if [[ -z ${match} ]]; then
         exit_print_error 'Param 2 had to be "root" or "www-data"(with docker magento).'
     fi
@@ -41,8 +41,8 @@ function remote_container() {
 function main() {
     echo 'Param 1 is one of the some value to remote: '${MAGENTO_VERSIONES}',db'
 #    read ssh_name
-    ssh_name=${1}
-    user_name=''
+    local ssh_name=${1}
+    local user_name=''
     if [[ ! ${ssh_name} = 'db' ]]; then
         echo 'Param 2 is one of value: root,www-data'
 #        read user_name

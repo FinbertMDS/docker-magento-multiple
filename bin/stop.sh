@@ -3,8 +3,8 @@
 source bin/common.sh
 
 function stopDocker() {
-    local DOCKER_BUILD_COMMAND=`get_docker_command "stop "`
-    exec_cmd "${DOCKER_BUILD_COMMAND}"
+    local docker_build_command=`get_docker_command "stop "`
+    exec_cmd "${docker_build_command}"
 }
 
 function main() {

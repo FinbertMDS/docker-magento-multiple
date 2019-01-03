@@ -60,7 +60,7 @@
     3. Create file `magento/Dockerfile_image_7.2`
     4. Build image
         ```bash
-        docker-compose -f docker-compose-magento-php-7.2-build.yml build
+        docker build -f magento/Dockerfile_7.2 -t docker-magento-multiple_php72 .
         ```
     5. Push image to Docker Hub
         ```bash

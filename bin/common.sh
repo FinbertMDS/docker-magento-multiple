@@ -5,27 +5,27 @@ MAGENTO_VERSION_ARRAY=(${MAGENTO_VERSIONES//,/ })
 
 # get version php from version magento
 function get_version_php() {
-    local PHP_VERSION=""
+    local php_version=""
     if [[ ${1} == 2.3* ]]; then
-        PHP_VERSION="7.2"
+        php_version="7.2"
     elif [[ ${1} == 2.2* ]]; then
-        PHP_VERSION="7.1"
+        php_version="7.1"
     elif [[ ${1} == 2.1* ]]; then
-        PHP_VERSION="7.0"
+        php_version="7.0"
     elif [[ ${1} == 1.* ]]; then
-        PHP_VERSION="5.6"
+        php_version="5.6"
     fi
-    echo ${PHP_VERSION}
+    echo ${php_version}
 }
 
 function get_version_magento() {
-    local MAGENTO_VERSION=''
+    local magento_version=''
     if [[ ${1} == 2.* ]]; then
-        MAGENTO_VERSION=2
+        magento_version=2
     elif [[ ${1} == 1.* ]]; then
-        MAGENTO_VERSION=1
+        magento_version=1
     fi
-    echo ${MAGENTO_VERSION}
+    echo ${magento_version}
 }
 
 function version_lib() {
@@ -79,12 +79,12 @@ function version_compare() {
 
 function get_version_sample_data_magento1() {
     if [[ ${1} == 1.* ]]; then
-        local VERSION_COMPARE_RESULT=`version_compare $1 '1.9.2.4' '<'`
-        local MAGENTO_SAMPLE_DATA_VERSION='1.9.2.4'
-        if [[ ${VERSION_COMPARE_RESULT} = '1' ]]; then
-            MAGENTO_SAMPLE_DATA_VERSION='1.9.1.0'
+        local version_compare_result=`version_compare $1 '1.9.2.4' '<'`
+        local magento_sample_data_version='1.9.2.4'
+        if [[ ${version_compare_result} = '1' ]]; then
+            magento_sample_data_version='1.9.1.0'
         fi
-        echo ${MAGENTO_SAMPLE_DATA_VERSION}
+        echo ${magento_sample_data_version}
     fi
 }
 
@@ -92,29 +92,29 @@ function get_version_sample_data_magento1() {
 # if port >= 6 character, remove last character
 # ex: version magento is 2.2.6 => port: 22671; 2.1.15 => port: 21157
 function get_port_service_docker() {
-    local PORT_SERVICE_DOCKER=''
-    local PHP_VERSION=`get_version_php "${1}"`
-    if [[ ! -z "${PHP_VERSION}" ]]; then
-        local PORT_SERVICE_DOCKER="${1//./}""${PHP_VERSION//./}"
-        while [[ ${#PORT_SERVICE_DOCKER} > 5 ]]; do
-            PORT_SERVICE_DOCKER="${PORT_SERVICE_DOCKER::-1}"
+    local port_service_docker=''
+    local php_version=`get_version_php "${1}"`
+    if [[ ! -z "${php_version}" ]]; then
+        local port_service_docker="${1//./}""${php_version//./}"
+        while [[ ${#port_service_docker} > 5 ]]; do
+            port_service_docker="${port_service_docker::-1}"
         done
     fi
-    echo ${PORT_SERVICE_DOCKER}
+    echo ${port_service_docker}
 }
 
 # run docker compose command with all file docker compose defined
 function get_docker_command() {
-    local DOCKER_BUILD_COMMAND='docker-compose -f docker-compose.yml '
+    local docker_build_command='docker-compose -f docker-compose.yml '
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
-        local PHP_VERSION=`get_version_php "${i}"`
-        if [[ ! -z "${PHP_VERSION}" ]]; then
-            DOCKER_BUILD_COMMAND=${DOCKER_BUILD_COMMAND}'-f docker-compose-magento-'${i}'-php-'${PHP_VERSION}'.yml '
+        local php_version=`get_version_php "${i}"`
+        if [[ ! -z "${php_version}" ]]; then
+            docker_build_command=${docker_build_command}'-f docker-compose-magento-'${i}'-php-'${php_version}'.yml '
         fi
     done
-    local DOCKER_BUILD_COMMAND=${DOCKER_BUILD_COMMAND}${1}
-    echo ${DOCKER_BUILD_COMMAND}
+    local docker_build_command=${docker_build_command}${1}
+    echo ${docker_build_command}
 }
 
 # print status

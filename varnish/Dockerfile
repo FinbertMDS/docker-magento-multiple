@@ -6,7 +6,6 @@ RUN apt-get update \
     ##install varnish
     && apt-get -y install varnish
 
-RUN rm /etc/varnish/default.vcl
 RUN rm /etc/default/varnish
 
 COPY varnish /etc/default/varnish

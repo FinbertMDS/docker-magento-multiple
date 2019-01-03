@@ -8,14 +8,14 @@ function create_backup_data_in_docker() {
         local port_service_docker=`get_port_service_docker "${i}"`
         local sql_backup_database='mysqldump -u root -pmagento magento'${port_service_docker}' > magento'${port_service_docker}'.sql'
         if [[ ! -f 'data/prepare_data/'${i}'.sql' ]]; then
-            echo 'need backup database for version: '${i}
+            echo 'Need backup database for version: '${i}
             exec_cmd "docker exec docker-magento-multiple_db_1 bash -c '${sql_backup_database}'"
         fi
     done
 }
 
 function copy_file_from_docker_to_host() {
-    backup_db_folder='data/prepare_data/'
+    local backup_db_folder='data/prepare_data/'
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
         local port_service_docker=`get_port_service_docker "${i}"`

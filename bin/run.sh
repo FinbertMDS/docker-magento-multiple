@@ -8,8 +8,8 @@ function run_docker() {
 }
 
 function run_sql_init_database() {
-    init_database_file='data/init_data/database.sql'
-    docker_container_name_db='docker-magento-multiple_db_1'
+    local init_database_file='data/init_data/database.sql'
+    local docker_container_name_db='docker-magento-multiple_db_1'
     exec_cmd "until docker exec -it ${docker_container_name_db} bash -c 'mysql --user=root --password=${MYSQL_ROOT_PASSWORD} --execute \"SHOW DATABASES;\"' > /dev/null 2>&1; do sleep 2; done"
     exec_cmd "docker cp ${init_database_file} ${docker_container_name_db}:/docker-entrypoint-initdb.d/database.sql"
     exec_cmd "docker exec ${docker_container_name_db} bash -c 'mysql -u root --password=${MYSQL_ROOT_PASSWORD} < docker-entrypoint-initdb.d/database.sql'"
