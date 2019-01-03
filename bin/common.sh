@@ -183,3 +183,17 @@ function print_site_magento_list() {
         echo "Backend: http://magento${port_service_docker}.com/admin"
     done
 }
+
+# check environment for install pwa studio: SAMPLE_DATA=0, INSTALL_PWA_STUDIO=1 and $1 is version magento which must greater or equals 2.3.0
+function check_install_pwa_studio() {
+    local is_install_pwa_studio=0
+    if [[ ${SAMPLE_DATA} = '0' ]]; then
+        local version_compare_result=`version_compare $1 '2.3.0' '<'`
+        if [[ ${version_compare_result} = '0' ]]; then
+            if [[ ${INSTALL_PWA_STUDIO} = '1' ]]; then
+                is_install_pwa_studio=1
+            fi
+        fi
+    fi
+    echo ${is_install_pwa_studio}
+}

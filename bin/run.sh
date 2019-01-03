@@ -27,15 +27,11 @@ function install_magento() {
         fi
         docker exec ${docker_container_name} bash -c "chown -R www-data:www-data .. && chmod -R 777 .."
         docker exec -u www-data ${docker_container_name} bash -c "./install_magento.sh"
-        if [[ ${SAMPLE_DATA} = '0' ]]; then
-            local VERSION_COMPARE_RESULT=`version_compare $1 '2.3.0' '<'`
-            if [[ ${VERSION_COMPARE_RESULT} = '0' ]]; then
-                if [[ ${INSTALL_PWA_STUDIO} = '1' ]]; then
-                    docker exec -u www-data ${docker_container_name} bash -c "composer update"
-                    docker exec -u www-data ${docker_container_name} bash -c "./deployVeniaSampleData.sh --yes"
-                    docker exec -u www-data ${docker_container_name} bash -c "php bin/magento setup:upgrade"
-                fi
-            fi
+        local is_install_pwa_studio=`check_install_pwa_studio ${1}`
+        if [[ ${is_install_pwa_studio} = '1' ]]; then
+            docker exec -u www-data ${docker_container_name} bash -c "composer update"
+            docker exec -u www-data ${docker_container_name} bash -c "./deployVeniaSampleData.sh --yes"
+            docker exec -u www-data ${docker_container_name} bash -c "php bin/magento setup:upgrade"
         fi
     fi
 }

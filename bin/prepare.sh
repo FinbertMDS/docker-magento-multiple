@@ -7,7 +7,12 @@ function prepare_environment_for_once_version_magento() {
         if [[ -f docker-compose.yml ]]; then
             local line_number_image_name_db=`awk '/# image_name_db/{ print NR; exit }' docker-compose.yml`
             if [[ ! -z ${line_number_image_name_db} ]]; then
-                exec_cmd "sed -i '${line_number_image_name_db}s/.*/    image: ngovanhuy0241\/docker-magento-multiple-db:${MAGENTO_VERSION_ARRAY[0]} # image_name_db/' docker-compose.yml"
+                local is_install_pwa_studio=`check_install_pwa_studio ${MAGENTO_VERSION_ARRAY[0]}`
+                if [[ ${is_install_pwa_studio} = '1' ]]; then
+                    exec_cmd "sed -i '${line_number_image_name_db}s/.*/    image: ngovanhuy0241\/docker-magento-multiple-db:${MAGENTO_VERSION_ARRAY[0]}-pwa # image_name_db/' docker-compose.yml"
+                else
+                    exec_cmd "sed -i '${line_number_image_name_db}s/.*/    image: ngovanhuy0241\/docker-magento-multiple-db:${MAGENTO_VERSION_ARRAY[0]} # image_name_db/' docker-compose.yml"
+                fi
             fi
         fi
     fi
