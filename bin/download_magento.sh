@@ -34,11 +34,12 @@ function download_magento1() {
 
 function download_magento2() {
     local magento_download_url='http://pubfiles.nexcess.net/magento/ce-packages/magento2-'${1}'.tar.gz'
+    local magento_filename='magento/magento2-'${1}'.tar.gz'
     if [[ ${SAMPLE_DATA} = '1' ]]; then
         magento_download_url='http://pubfiles.nexcess.net/magento/ce-packages/magento2-with-samples-'${1}'.tar.gz'
+        magento_filename='magento/magento2-with-samples-'${1}'.tar.gz'
     fi
 
-    local magento_filename='magento/magento2-'${1}'.tar.gz'
     if [[ ! -f  ${magento_filename} ]]; then
         wget -O ${magento_filename} ${magento_download_url}
     fi

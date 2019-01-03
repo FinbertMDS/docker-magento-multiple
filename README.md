@@ -50,6 +50,7 @@
 8. `bin/remove.sh`: Stop and remove all container what started by docker compose
 9. `bin/ssh.sh`: Ssh to docker container what containers contain magento and contain database.
 10. `bin/backup_database.sh`: Backup all databases which not backup before now to file.
+11. `bin/install_pwa_studio_client.sh`: Install pwa studio with version magento greater than 2.3.0.
 
 ## Build image to [Docker Hub](https://hub.docker.com)
 ### ngovanhuy0241/docker-magento-multiple-magento
@@ -157,3 +158,9 @@
             }
         }
         ```
+- Install PWA Studio 
+    - Install Magento version greater than 2.3.0 without sample data. Then Install Venia sample data.
+    - Install PWA connect to Magento by API.
+    - Note:
+        - Magento 2.3.0 on Php version 7.1 
+        - Change mediaPath to can view image at page of PWA: packages/venia-concept/src/util/makeMediaPath.js:19 to `const mediaPath = '/pub/media/catalog/';` and copy folder `pub/media` on server magento to folder `packages/venia-concept/dist/pub/media`

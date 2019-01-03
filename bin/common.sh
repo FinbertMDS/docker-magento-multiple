@@ -5,7 +5,7 @@ MAGENTO_VERSION_ARRAY=(${MAGENTO_VERSIONES//,/ })
 
 # get version php from version magento
 function get_version_php() {
-    PHP_VERSION=""
+    local PHP_VERSION=""
     if [[ ${1} == 2.3* ]]; then
         PHP_VERSION="7.2"
     elif [[ ${1} == 2.2* ]]; then
@@ -19,7 +19,7 @@ function get_version_php() {
 }
 
 function get_version_magento() {
-    MAGENTO_VERSION=''
+    local MAGENTO_VERSION=''
     if [[ ${1} == 2.* ]]; then
         MAGENTO_VERSION=2
     elif [[ ${1} == 1.* ]]; then
@@ -79,8 +79,8 @@ function version_compare() {
 
 function get_version_sample_data_magento1() {
     if [[ ${1} == 1.* ]]; then
-        VERSION_COMPARE_RESULT=`version_compare $1 '1.9.2.4' '<'`
-        MAGENTO_SAMPLE_DATA_VERSION='1.9.2.4'
+        local VERSION_COMPARE_RESULT=`version_compare $1 '1.9.2.4' '<'`
+        local MAGENTO_SAMPLE_DATA_VERSION='1.9.2.4'
         if [[ ${VERSION_COMPARE_RESULT} = '1' ]]; then
             MAGENTO_SAMPLE_DATA_VERSION='1.9.1.0'
         fi
@@ -92,10 +92,10 @@ function get_version_sample_data_magento1() {
 # if port >= 6 character, remove last character
 # ex: version magento is 2.2.6 => port: 22671; 2.1.15 => port: 21157
 function get_port_service_docker() {
-    PORT_SERVICE_DOCKER=''
+    local PORT_SERVICE_DOCKER=''
     local PHP_VERSION=`get_version_php "${1}"`
     if [[ ! -z "${PHP_VERSION}" ]]; then
-        PORT_SERVICE_DOCKER="${1//./}""${PHP_VERSION//./}"
+        local PORT_SERVICE_DOCKER="${1//./}""${PHP_VERSION//./}"
         while [[ ${#PORT_SERVICE_DOCKER} > 5 ]]; do
             PORT_SERVICE_DOCKER="${PORT_SERVICE_DOCKER::-1}"
         done
@@ -113,7 +113,7 @@ function get_docker_command() {
             DOCKER_BUILD_COMMAND=${DOCKER_BUILD_COMMAND}'-f docker-compose-magento-'${i}'-php-'${PHP_VERSION}'.yml '
         fi
     done
-    DOCKER_BUILD_COMMAND=${DOCKER_BUILD_COMMAND}${1}
+    local DOCKER_BUILD_COMMAND=${DOCKER_BUILD_COMMAND}${1}
     echo ${DOCKER_BUILD_COMMAND}
 }
 
@@ -160,10 +160,10 @@ function curl_check () {
 }
 
 function calculate_time_run_command() {
-    start=$(date +%s)
+    local start=$(date +%s)
     $1
-    end=$(date +%s)
-    diff=$(( $end - $start ))
+    local end=$(date +%s)
+    local diff=$(( $end - $start ))
     print_status "+ ${1}: It took $diff seconds"
 }
 

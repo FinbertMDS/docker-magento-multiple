@@ -72,8 +72,14 @@ function copy_file_install_magento() {
     print_status "Copy source code magento and file install magento to volume docker..."
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
-        magento_version=`get_version_magento ${i}`
-        magento_filename_src='magento'${magento_version}'-'${i}'.tar.gz'
+        local magento_version=`get_version_magento ${i}`
+        local magento_filename_src="magento${magento_version}-${i}.tar.gz"
+        if [[ ${SAMPLE_DATA} = '1' ]]; then
+            if [[ ${magento_version} = '2' ]]; then
+                magento_filename_src="magento${magento_version}-with-samples-${i}.tar.gz"
+            fi
+        fi
+
         if [[ ! -f 'magento/'${magento_filename_src} ]]; then
           echo "Please place file ${magento_filename_src} at folder magento"
           exit
@@ -84,7 +90,7 @@ function copy_file_install_magento() {
         fi
         if [[ ${SAMPLE_DATA} = '1' ]]; then
             if [[ ${magento_version} = '1' ]]; then
-                magento_sample_data_version=`get_version_sample_data_magento1 ${i}`
+                local magento_sample_data_version=`get_version_sample_data_magento1 ${i}`
                 local magento_sample_filename='magento/magento1-sample-data-'${magento_sample_data_version}'.tar.gz'
                 cp ${magento_sample_filename} ${magento_folder_src}'/magento-sample.tar.gz'
                 tar xvf ${magento_folder_src}'/magento-sample.tar.gz' -C ${magento_folder_src} &> /dev/null
@@ -93,6 +99,14 @@ function copy_file_install_magento() {
             fi
         fi
         cp 'magento/install_magento'${magento_version}'.sh' ${magento_folder_src}'/install_magento.sh'
+        if [[ ${SAMPLE_DATA} = '0' ]]; then
+            local VERSION_COMPARE_RESULT=`version_compare $1 '2.3.0' '<'`
+            if [[ ${VERSION_COMPARE_RESULT} = '0' ]]; then
+                if [[ ${INSTALL_PWA_STUDIO} = '1' ]]; then
+                    cp "magento/deployVeniaSampleData.sh" ${magento_folder_src}'/'
+                fi
+            fi
+        fi
         cp magento/mysql.php ${magento_folder_src}
     done
     print_done
@@ -190,7 +204,7 @@ function copy_nginx_config_to_local() {
 }
 
 function main() {
-    prepare_environment_for_once_version_magento
+#    prepare_environment_for_once_version_magento
     remove_persist_data
     init_folder_persist_data_docker
     prepare_init_database_sql
