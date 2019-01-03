@@ -99,6 +99,7 @@ function copy_file_install_magento() {
             fi
         fi
         cp 'magento/install_magento'${magento_version}'.sh' ${magento_folder_src}'/install_magento.sh'
+        cp 'magento/install_pwa_pos_magestore.sh' ${magento_folder_src}'/'
         if [[ ${SAMPLE_DATA} = '0' ]]; then
             local VERSION_COMPARE_RESULT=`version_compare $1 '2.3.0' '<'`
             if [[ ${VERSION_COMPARE_RESULT} = '0' ]]; then
@@ -176,10 +177,10 @@ server {
     server_name magento${port_service_docker}.com;
 
     location / {
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
         proxy_pass http://magento${port_service_docker} ;
     }
 }
@@ -204,7 +205,7 @@ function copy_nginx_config_to_local() {
 }
 
 function main() {
-#    prepare_environment_for_once_version_magento
+    prepare_environment_for_once_version_magento
     remove_persist_data
     init_folder_persist_data_docker
     prepare_init_database_sql
