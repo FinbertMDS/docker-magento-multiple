@@ -164,3 +164,4 @@
     - Note:
         - Magento 2.3.0 on Php version 7.1 
         - Change mediaPath to can view image at page of PWA: packages/venia-concept/src/util/makeMediaPath.js:19 to `const mediaPath = '/pub/media/catalog/';` and copy folder `pub/media` on server magento to folder `packages/venia-concept/dist/pub/media`
+        - You must change `github-oauth` in file `magento/auth.json` with 

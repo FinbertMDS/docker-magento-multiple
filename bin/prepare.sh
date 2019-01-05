@@ -130,9 +130,10 @@ version: '3'
 
 services:
   magento${port_service_docker}:
-    build:
-      context: ./magento
-      dockerfile: Dockerfile_image_${php_version}
+#    build:
+#      context: ./magento
+#      dockerfile: Dockerfile_image_${php_version}
+    image: ngovanhuy0241/docker-magento-multiple-magento:magento${port_service_docker}
     container_name: docker-magento-multiple_magento_${i}_${php_version}_1
     ports:
       - ${port_service_docker}:80

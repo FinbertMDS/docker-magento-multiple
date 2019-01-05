@@ -8,7 +8,7 @@ if [[ ! -d pwa-studio ]]; then
 fi
 cd pwa-studio
 
-npm install
+yarn install
 
 cp packages/venia-concept/.env.dist packages/venia-concept/.env
 
@@ -18,7 +18,7 @@ sed -i "s%$line_old%$line_new%g" packages/venia-concept/.env
 
 echo 'Change value MAGENTO_BACKEND_URL="http://magento23072.com/" in packages/venia-concept/.env'
 echo 'Build artifacts: npm run build'
-npm run build
+yarn build
 echo "Start server: npm run watch:venia"
-npm run watch:venia
+yarn watch:venia
 
