@@ -39,4 +39,6 @@ php bin/magento deploy:mode:set developer
 php bin/magento setup:static-content:deploy -f
 
 # Setup cron
-php bin/magento cron:install --force
+if [[ ${INSTALL_CRON} = '1' ]]; then
+    php bin/magento cron:install --force
+fi
