@@ -2,6 +2,20 @@
 
 source bin/common.sh
 
+function validate_install_pwa_studio() {
+    if [[ ${INSTALL_PWA_STUDIO} = '1' ]]; then
+        local line_number_sample_data=`awk '/SAMPLE_DATA/{ print NR; exit }' .env`
+        exec_cmd "sed -i '${line_number_sample_data}s/.*/SAMPLE_DATA=0 # install magento with sample data/' .env"
+        echo ${MAGENTO_VERSION_ARRAY[0]}
+        local version_compare_result=`version_compare ${MAGENTO_VERSION_ARRAY[0]} '2.3.0' '<'`
+        if [[ ${version_compare_result} = '1' ]]; then
+            local line_number_magento_version=`awk '/MAGENTO_VERSIONES/{ print NR; exit }' .env`
+            exec_cmd "sed -i '${line_number_magento_version}s/.*/MAGENTO_VERSIONES=2.3.0/' .env"
+        fi
+        source .env
+    fi
+}
+
 function prepare_environment_for_once_version_magento() {
     if [[ ${#MAGENTO_VERSION_ARRAY[@]} = 1 ]]; then
         if [[ -f docker-compose.yml ]]; then
@@ -211,6 +225,7 @@ function copy_nginx_config_to_local() {
 }
 
 function main() {
+    validate_install_pwa_studio
     prepare_environment_for_once_version_magento
     remove_persist_data
     init_folder_persist_data_docker

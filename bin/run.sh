@@ -20,11 +20,22 @@ function install_magento() {
     if [[ ! -z ${php_version} ]]; then
         local docker_container_name="docker-magento-multiple_magento_"${1}"_"${php_version}"_1"
         local magento_version=`get_version_magento ${1}`
-        if [[ ${INSTALL_CRON} = '1' ]]; then
-            if [[ ${magento_version} = '2' ]]; then
+        if [[ ${magento_version} = '2' ]]; then
+            if [[ ${INSTALL_CRON} = '1' ]]; then
                 exec_cmd 'docker exec '${docker_container_name}' bash -c "service cron start"'
             fi
+#TODO : add multiple line to file .htaccess in Magento 2 to use PWA POS
+#Header always set Access-Control-Allow-Origin "*"
+#Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT"
+#Header always set Access-Control-Max-Age "1000"
+#Header always set Access-Control-Allow-Headers "x-requested-with, Content-Type, origin, authorization, accept, client-security-token"
+#
+#RewriteEngine On
+#RewriteCond %{REQUEST_METHOD} OPTIONS
+#RewriteRule ^(.*)$ $1 [R=200,L]
         fi
+#TODO : uncomment line at file .htaccess in Magento 1 to use Web POS
+#        Options -MultiViews
         docker exec ${docker_container_name} bash -c "chown -R www-data:www-data .. && chmod -R 777 .."
         docker exec -u www-data ${docker_container_name} bash -c "./install_magento.sh"
         local is_install_pwa_studio=`check_install_pwa_studio ${1}`
