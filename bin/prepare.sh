@@ -227,7 +227,7 @@ function copy_nginx_config_to_local() {
 function main() {
     validate_install_pwa_studio
     prepare_environment_for_once_version_magento
-    remove_persist_data
+#    remove_persist_data
     init_folder_persist_data_docker
     prepare_init_database_sql
     # use when build image ngovanhuy0241/docker-magento-multiple-db

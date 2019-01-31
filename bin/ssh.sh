@@ -42,6 +42,9 @@ function main() {
     echo 'Param 1 is one of the some value to remote: '${MAGENTO_VERSIONES}',db'
 #    read ssh_name
     local ssh_name=${1}
+    if [[ -z ${1} ]]; then
+        ssh_name=${MAGENTO_VERSIONES[0]}
+    fi
     local user_name=''
     if [[ ! ${ssh_name} = 'db' ]]; then
         echo 'Param 2 is one of value: root,www-data'

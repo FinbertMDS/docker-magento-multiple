@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  magento23071:
+#    build:
+#      context: ./magento
+#      dockerfile: Dockerfile_image_7.1
+    image: ngovanhuy0241/docker-magento-multiple-magento:magento23071
+    container_name: docker-magento-multiple_magento_2.3.0_7.1_1
+    ports:
+      - 23071:80
+    depends_on:
+      - db
+    environment:
+      MAGENTO_URL: http://magento23071.com/
+      MYSQL_DATABASE: magento23072
+    env_file:
+      - .env
+    volumes:
+      - ./src/230:/var/www/html
+    networks:
+      webnet:
+
+networks:
+  webnet:

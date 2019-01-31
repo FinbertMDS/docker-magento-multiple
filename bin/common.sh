@@ -8,6 +8,9 @@ function get_version_php() {
     local php_version=""
     if [[ ${1} == 2.3* ]]; then
         php_version="7.2"
+        if [[ ${INSTALL_PWA_STUDIO} = '1' ]]; then
+            php_version="7.1"
+        fi
     elif [[ ${1} == 2.2* ]]; then
         php_version="7.1"
     elif [[ ${1} == 2.1* ]]; then

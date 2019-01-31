@@ -36,7 +36,8 @@ php bin/magento config:set admin/security/session_lifetime 31536000
 php bin/magento config:set admin/captcha/enable 0
 
 php bin/magento deploy:mode:set developer
-php bin/magento setup:static-content:deploy -f
+php bin/magento setup:di:compile
+#php bin/magento setup:static-content:deploy -f
 
 # Setup cron
 if [[ ${INSTALL_CRON} = '1' ]]; then
