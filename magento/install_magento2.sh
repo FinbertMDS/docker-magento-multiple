@@ -36,6 +36,7 @@ php bin/magento config:set admin/security/session_lifetime 31536000
 php bin/magento config:set web/cookie/cookie_lifetime 31536000
 php bin/magento config:set customer/online_customers/section_data_lifetime 525600
 php bin/magento config:set admin/captcha/enable 0
+php bin/magento config:set admin/security/password_lifetime ''
 
 php bin/magento deploy:mode:set developer
 php bin/magento setup:di:compile
