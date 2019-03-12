@@ -179,11 +179,11 @@ function print_site_magento_list() {
     print_status "Site magento list:"
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
-        local port_service_docker=`get_port_service_docker "${i}"`
+        local magento_version="${i//./}"
         echo
         echo "Magento version ${i}"
-        echo "Frontend: http://magento${port_service_docker}.com/"
-        echo "Backend: http://magento${port_service_docker}.com/admin"
+        echo "Frontend: http://m${magento_version}.io/"
+        echo "Backend: http://m${magento_version}.io/admin"
     done
 }
 

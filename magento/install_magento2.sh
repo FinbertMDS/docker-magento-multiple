@@ -29,12 +29,11 @@ fi
 
 eval ${install_magento}
 
-# Update config for testing
+# Update config
 php bin/magento config:set cms/wysiwyg/enabled disabled
 php bin/magento config:set admin/security/admin_account_sharing 1
 php bin/magento config:set admin/security/session_lifetime 31536000
 php bin/magento config:set web/cookie/cookie_lifetime 31536000
-php bin/magento config:set customer/online_customers/minutes_interval 525600
 php bin/magento config:set customer/online_customers/section_data_lifetime 525600
 php bin/magento config:set admin/captcha/enable 0
 

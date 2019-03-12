@@ -11,7 +11,7 @@ function validate_ssh() {
         exit_print_error 'Missing version magento.'
     fi
     if [[ ! ${MAGENTO_VERSIONES} == *"${1}"* ]] && [[ ! $1 = 'db' ]]; then
-        exit_print_error 'Param 1 had to be "version magento" or "db".'
+        exit_print_error 'Param 1 had to be "version magento"'
     fi
 }
 

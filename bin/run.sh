@@ -58,7 +58,8 @@ function add_host_to_local() {
     print_status "Add host to local..."
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
-        exec_cmd "grep -q -F '127.0.0.1 magento`get_port_service_docker "${i}"`.com' /etc/hosts || echo '127.0.0.1 magento`get_port_service_docker "${i}"`.com' | sudo tee --append /etc/hosts > /dev/null"
+        local magento_version="${i//./}"
+        exec_cmd "grep -q -F '127.0.0.1 m${magento_version}.io' /etc/hosts || echo '127.0.0.1 m${magento_version}.io' | sudo tee --append /etc/hosts > /dev/null"
     done
     print_done
 }

@@ -136,9 +136,10 @@ function prepare_docker_compose_file() {
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
         local php_version=`get_version_php "${i}"`
+        local magento_version="${i//./}"
         local port_service_docker=`get_port_service_docker "${i}"`
-        local docker_compose_file='docker-compose-files/docker-compose-magento-'${i}'-php-'${php_version}'.yml'
-        if [[ ! -f ${docker_compose_file} ]]; then
+        local docker_compose_file='docker-compose-magento-'${i}'-php-'${php_version}'.yml'
+        rm -f ${docker_compose_file}
 cat >${docker_compose_file} <<EOL
 version: '3'
 
@@ -154,7 +155,7 @@ services:
     depends_on:
       - db
     environment:
-      MAGENTO_URL: http://magento${port_service_docker}.com/
+      MAGENTO_URL: http://m${magento_version}.io/
       MYSQL_DATABASE: magento${port_service_docker}
     env_file:
       - .env
@@ -165,8 +166,6 @@ services:
 networks:
   webnet:
 EOL
-        fi
-        cp ${docker_compose_file} .
     done
 }
 
@@ -184,28 +183,28 @@ function install_nginx() {
 function prepare_nginx_config_file() {
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
+        local magento_version="${i//./}"
         local port_service_docker=`get_port_service_docker "${i}"`
         local nginx_magento_config_file="nginx/${i}-nginx-magento2-docker"
-        if [[ ! -f ${nginx_magento_config_file} ]]; then
+        rm -f ${nginx_magento_config_file}
 cat >${nginx_magento_config_file} <<EOL
-upstream magento${port_service_docker} {
+upstream magento${magento_version} {
     server 127.0.0.1:${port_service_docker} weight=1;
 }
 
 server {
     listen 80;
-    server_name magento${port_service_docker}.com;
+    server_name m${magento_version}.io;
 
     location / {
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;
-        proxy_pass http://magento${port_service_docker} ;
+        proxy_pass http://magento${magento_version} ;
     }
 }
 EOL
-        fi
     done
 }
 
@@ -227,7 +226,7 @@ function copy_nginx_config_to_local() {
 function main() {
     validate_install_pwa_studio
     prepare_environment_for_once_version_magento
-#    remove_persist_data
+    remove_persist_data
     init_folder_persist_data_docker
     prepare_init_database_sql
     # use when build image ngovanhuy0241/docker-magento-multiple-db
