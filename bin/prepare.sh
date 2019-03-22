@@ -19,15 +19,22 @@ function validate_install_pwa_studio() {
 function prepare_environment_for_once_version_magento() {
     if [[ ${#MAGENTO_VERSION_ARRAY[@]} = 1 ]]; then
         if [[ -f docker-compose.yml ]]; then
-            local line_number_image_name_db=`awk '/# image_name_db/{ print NR; exit }' docker-compose.yml`
-            if [[ ! -z ${line_number_image_name_db} ]]; then
-                local is_install_pwa_studio=`check_install_pwa_studio ${MAGENTO_VERSION_ARRAY[0]}`
-                if [[ ${is_install_pwa_studio} = '1' ]]; then
-                    exec_cmd "sed -i '${line_number_image_name_db}s/.*/    image: ngovanhuy0241\/docker-magento-multiple-db:${MAGENTO_VERSION_ARRAY[0]}-pwa # image_name_db/' docker-compose.yml"
-                else
-                    exec_cmd "sed -i '${line_number_image_name_db}s/.*/    image: ngovanhuy0241\/docker-magento-multiple-db:${MAGENTO_VERSION_ARRAY[0]} # image_name_db/' docker-compose.yml"
-                fi
+		    local docker_hub_name="ngovanhuy0241/docker-magento-multiple-db"
+		    local docker_hub_tag_name="${MAGENTO_VERSION_ARRAY[0]}"
+		    if [[ ${is_install_pwa_studio} = '1' ]]; then
+		        docker_hub_tag_name="${MAGENTO_VERSION_ARRAY[0]}-pwa"
             fi
+		    if docker_tag_exists ${docker_hub_name} ${docker_hub_tag_name} ; then
+	            local line_number_image_name_db=`awk '/# image_name_db/{ print NR; exit }' docker-compose.yml`
+	            if [[ ! -z ${line_number_image_name_db} ]]; then
+	                local is_install_pwa_studio=`check_install_pwa_studio ${MAGENTO_VERSION_ARRAY[0]}`
+	                if [[ ${is_install_pwa_studio} = '1' ]]; then
+	                    exec_cmd "sed -i '${line_number_image_name_db}s/.*/    image: ngovanhuy0241\/docker-magento-multiple-db:${MAGENTO_VERSION_ARRAY[0]}-pwa # image_name_db/' docker-compose.yml"
+	                else
+	                    exec_cmd "sed -i '${line_number_image_name_db}s/.*/    image: ngovanhuy0241\/docker-magento-multiple-db:${MAGENTO_VERSION_ARRAY[0]} # image_name_db/' docker-compose.yml"
+	                fi
+	            fi
+			fi
         fi
     fi
 }
@@ -52,7 +59,27 @@ function remove_persist_data() {
     print_status "Remove persist data..."
     rm -rf data/init_data
 #    sudo rm -rf data/mysql
-    sudo rm -rf src/*
+#    sudo rm -rf src/*
+	for directory in src/*; do
+	  if [[ -d "${directory}" ]]; then
+	    local is_folder_magento_version=0
+	    for i in "${MAGENTO_VERSION_ARRAY[@]}"
+	    do
+            local magento_version="${i//./}"
+            if [[ ${directory} == *"${magento_version}"* ]]; then
+		        local magento_installed_flag=`check_magento_version_installed ${i}`
+		        if [[ ${magento_installed_flag} = '1' ]]; then
+		            is_folder_magento_version=1
+		        fi
+            fi
+	    done
+	    if [[ ${is_folder_magento_version} = '0' ]]; then
+			echo -ne "Removing folder: $directory..."
+	        sudo rm -rf "$directory"
+			echo "Done."
+	    fi
+	  fi
+	done
     print_done
 }
 
@@ -137,30 +164,40 @@ function prepare_docker_compose_file() {
     do
         local php_version=`get_version_php "${i}"`
         local magento_version="${i//./}"
-        local port_service_docker=`get_port_service_docker "${i}"`
         local docker_compose_file='docker-compose-magento-'${i}'-php-'${php_version}'.yml'
+        local magento_url=`get_magento_url_from_version "${i}"`
+        local magento_db_name=`get_magento_db_name "${i}"`
+        local port_service_docker=`get_port_service_docker "${i}"`
+        local docker_hub_name="ngovanhuy0241/docker-magento-multiple-magento"
+        local docker_hub_tag_name="magento${port_service_docker}"
         rm -f ${docker_compose_file}
+        local docker_compose_service_magento="build:
+      context: ./magento
+      dockerfile: Dockerfile_image_${php_version}"
+        if docker_tag_exists ${docker_hub_name} ${docker_hub_tag_name} ; then
+            docker_compose_service_magento="#build:
+#      context: ./magento
+#      dockerfile: Dockerfile_image_${php_version}
+    image: ngovanhuy0241/docker-magento-multiple-magento:magento${port_service_docker}"
+		fi
 cat >${docker_compose_file} <<EOL
 version: '3'
 
 services:
-  magento${port_service_docker}:
-#    build:
-#      context: ./magento
-#      dockerfile: Dockerfile_image_${php_version}
-    image: ngovanhuy0241/docker-magento-multiple-magento:magento${port_service_docker}
-    container_name: docker-magento-multiple_magento_${i}_${php_version}_1
+  ${docker_hub_tag_name}:
+    ${docker_compose_service_magento}
+#    container_name: docker-magento-multiple_magento_${i}_${php_version}_1
     ports:
       - ${port_service_docker}:80
     depends_on:
       - db
     environment:
-      MAGENTO_URL: http://m${magento_version}.io/
-      MYSQL_DATABASE: magento${port_service_docker}
+      MAGENTO_URL: ${magento_url}
+      MYSQL_DATABASE: ${magento_db_name}
     env_file:
       - .env
     volumes:
-      - ./src/${i//./}:/var/www/html
+      - ./src/${magento_version}:/var/www/html
     networks:
       webnet:
 networks:
@@ -186,22 +223,24 @@ function prepare_nginx_config_file() {
         local magento_version="${i//./}"
         local port_service_docker=`get_port_service_docker "${i}"`
         local nginx_magento_config_file="nginx/${i}-nginx-magento2-docker"
+        local upstream_name="magento${magento_version}"
+        local magento_url=`get_magento_host_name_from_version "${i}"`
         rm -f ${nginx_magento_config_file}
 cat >${nginx_magento_config_file} <<EOL
-upstream magento${magento_version} {
+upstream ${upstream_name} {
     server 127.0.0.1:${port_service_docker} weight=1;
 }
 
 server {
     listen 80;
-    server_name m${magento_version}.io;
+    server_name ${magento_url};
 
     location / {
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;
-        proxy_pass http://magento${magento_version} ;
+        proxy_pass http://${upstream_name} ;
     }
 }
 EOL
@@ -229,13 +268,14 @@ function main() {
     remove_persist_data
     init_folder_persist_data_docker
     prepare_init_database_sql
-    # use when build image ngovanhuy0241/docker-magento-multiple-db
     prepare_sql_import_db
     copy_file_install_magento
     prepare_docker_compose_file
-    install_nginx
-    prepare_nginx_config_file
-    copy_nginx_config_to_local
+    if [[ ${INSTALL_MAGENTO_WITH_DOMAIN} = '1' ]]; then
+	    install_nginx
+	    prepare_nginx_config_file
+	    copy_nginx_config_to_local
+    fi
 }
 
 calculate_time_run_command main

@@ -10,158 +10,42 @@
 - Cron
 - RabbitMQ
 
-## Build Docker Magento
-1. If you want install multiple version magento to, you add version magento to variable `MAGENTO_VERSIONES` in file `.env` with format `version1,version2`.
-    ```text
-    MAGENTO_VERSIONES='2.2.7,2.3.0'
+## Cách sử dụng
+- Yêu cầu phần cứng:
+	- Cài đặt trên Ubuntu đã cài docker.
+- File cấu hình: .env chứa thông tin config của toàn bộ repo gồm một số config quan trọng:
+	- MAGENTO_VERSIONES: version của tất cả các phiên bản Mangeto, nếu cài đặt nhiều version thì các version cách nhau bởi dấu phẩy. Ví dụ: `MAGENTO_VERSIONES=2.2.5,2.2.6`, nếu chỉ cài đặt 1 version thì như ví dụ: `MAGENTO_VERSIONES=2.2.5` 
+	- INSTALL_MAGENTO_WITH_DOMAIN: 
+		- Giá trị là 1: install magento với domain được config với 2 tham số: MAGENTO_URL_PREFIX và MAGENTO_URL_TLD. Trong file .env magento sẽ được install ở domain: `http://m225.io`
+		- Giá trị là 0: install magento với port.
+	- Lưu ý: Các config trong file .env. True=1, False=0.
+- Các file bash script trong folder `bin` có thể tham khảo ý nghĩa trong file `README_Dev.md`
+- Muốn install magento thì làm theo các bước sau:
+	- Sửa file .env: config version magento.
+	- Chạy lệnh cài đặt: 
+		```bash
+		./bin/main.sh
+		```
+	- Lưu ý: 
+		- Tài khoản admin magento mặc định:
+			```text
+			admin1/admin123
+			hoặc
+			admin/admin123
+			```
+		- Cài đặt 1 version magento 1 lúc sẽ nhanh hơn.
+		- Khi cài đặt nhiều version magento mà không sử dụng domain sẽ không thể đồng thời đăng nhập vào admin magento cùng lúc.
+		- Sau khi cài 1 version magento, muốn cài đặt thêm 1 version magento khác đồng thời thì thêm version magento vào file `.env` với config `MAGENTO_VERSIONES` và chạy lại lệnh:
+			```bash
+			./bin/main.sh
+			```
+			
+- Muốn xóa magento thì chạy lệnh dưới để down container chạy magento và remove source code magento.
+	```bash
+	./bin/remove.sh
+	```
+	
+- Folder chứa code Magento
+	```bash
+    source ./bin/common.sh && print_site_magento_list
     ```
-    
-    - Note: If you only install a version Magento: example `2.3.0` and you want install more quicker than, you can change file `docker-compose.yml` at `services` -> `db` from:
-        ```text
-          db:
-            build: ./data
-        #    image: ngovanhuy0241/docker-magento-multiple-db
-            container_name: docker-magento-multiple_db_1
-        ```
-        
-        to
-        
-        ```text
-          db:
-        #    build: ./data
-            image: ngovanhuy0241/docker-magento-multiple-db:2.3.0
-            container_name: docker-magento-multiple_db_1
-        ``` 
-        
-        This above had include in bash script `bin/prepare` function `prepare_environment_for_once_version_magento`. You only need change version on file `.env` environment `MAGENTO_VERSIONES` with once version magento. 
-2. Run command to install Magento
-    ```bash
-    ./bin/main.sh
-    ```
-
-## Some bash in folder bin
-1. `bin/common.sh`: Some function used for other script.
-2. `bin/main.sh`: Run when create and start container first time: download magento, then build, then start container.
-3. `bin/download_magento.sh`: Download source to install magento
-4. `bin/build.sh`: Build all images.
-5. `bin/run.sh`: Run images to containers and start its in background from first time.
-6. `bin/start.sh`: Run all container stared before now, start its in background from second time.
-7. `bin/stop.sh`: Stop all container which running in background.
-8. `bin/remove.sh`: Stop and remove all container what started by docker compose
-9. `bin/ssh.sh`: Ssh to docker container what containers contain magento and contain database.
-10. `bin/backup_database.sh`: Backup all databases which not backup before now to file.
-11. `bin/install_pwa_studio_client.sh`: Install pwa studio with version magento greater than 2.3.0.
-
-## Build image to [Docker Hub](https://hub.docker.com)
-### ngovanhuy0241/docker-magento-multiple-magento
-- With version new of PHP 7.2
-    1. Create file `docker-compose-magento-php-7.2-build.yml`
-    2. Create file `magento/Dockerfile_7.2`
-    3. Create file `magento/Dockerfile_image_7.2`
-    4. Build image
-        ```bash
-        docker build -f magento/Dockerfile_7.2 -t docker-magento-multiple_php72 .
-        ```
-    5. Push image to Docker Hub
-        ```bash
-        docker login
-        docker tag docker-magento-multiple_php72 ngovanhuy0241/docker-magento-multiple-magento:php72
-        docker push ngovanhuy0241/docker-magento-multiple-magento:php72
-        ```
-
-### Docker Images
-1. [ngovanhuy0241/docker-magento-multiple-db](https://hub.docker.com/r/ngovanhuy0241/docker-magento-multiple-db/)
-    - [Github](https://github.com/FinbertMagestore/docker-magento-multiple-db/tree/develop)
-2. [ngovanhuy0241/docker-magento-multiple-magento](https://hub.docker.com/r/ngovanhuy0241/docker-magento-multiple-magento)
-    - [Github](https://github.com/FinbertMagestore/docker-magento-multiple/tree/develop/magento)
-    - Docker file:
-        - Dockerfile_5.6
-        - Dockerfile_7.0
-        - Dockerfile_7.1
-        - Dockerfile_7.2
-3. [ngovanhuy0241/docker-magento-multiple-varnish](https://hub.docker.com/r/ngovanhuy0241/docker-magento-multiple-varnish)
-    - [Github](https://github.com/FinbertMagestore/docker-magento-multiple/tree/develop/varnish)
-## Note
-- Docker: MariaDb, Phpmyadmin
-    - Magento 2.3.x
-        - 2.3.0
-    - Magento 2.2.x
-        - 2.2.1
-        - 2.2.6
-        - 2.2.7        
-    - Magento 2.1.x
-        - 2.1.15
-        - 2.1.16
-        - 2.1.3        
-    - Magento 1.x 
-        - 1.9.3.10
-- [Sample add version magento 2.1.3](https://github.com/FinbertMagestore/docker-magento-multiple/commit/a270a89445430f16d7e24231d2c3ae7cd08a7a0f)
-- Links:
-    - Magento:
-        - Run command below to show all link to version magento
-            ```bash
-            source ./bin/common.sh && print_site_magento_list
-            ```
-    - Phpmyadmin: http://localhost:2122/
-    - MailHog: http://localhost:8025/
-- Source:
-    - Download Magento 2: http://pubfiles.nexcess.net/magento/ce-packages/    
-- Config varnish
-    - With a version magento example: 2.3.0
-        - You copy file `varnish/template.default.vcl` to `varnish/2.3.0.default.vcl` and then change info `backend default` (host and port) to
-            ```text
-            backend default {
-                .host = "magento23072";
-                .port = "22671";
-                .first_byte_timeout = 600s;
-                .probe = {
-                    .url = "/pub/health_check.php";
-                    .timeout = 2s;
-                    .interval = 5s;
-                    .window = 10;
-                    .threshold = 5;
-               }
-            }
-            ```
-        - You add `varnish` to file `docker-compose-magento-2.3.0-php-7.2.yml`
-            ```text
-            varnish:
-                build: ./varnish
-                ports:
-                  - 6082:6082
-                volumes:
-                  - ./varnish/230.default.vcl:/etc/varnish/default.vcl
-                depends_on:
-                  - magento23072
-                links:
-                  - magento23072
-                networks:
-                  webnet:
-            ```
-- Install Nginx at Local as Proxy Server
-    - Configuration Nginx
-        ```text
-        upstream magento23072 {
-            server 127.0.0.1:23072 weight=1;
-        }
-        
-        server {
-            listen 80;
-            server_name magento23072.com;
-        
-            location / {
-                proxy_set_header Host $host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header X-Forwarded-Proto $scheme;
-                proxy_pass http://magento23072 ;
-            }
-        }
-        ```
-- Install PWA Studio 
-    - Install Magento version greater than 2.3.0 without sample data. Then Install Venia sample data.
-    - Install PWA connect to Magento by API.
-    - Note:
-        - Magento 2.3.0 on Php version 7.1 
-        - Change mediaPath to can view image at page of PWA: packages/venia-concept/src/util/makeMediaPath.js:19 to `const mediaPath = '/pub/media/catalog/';` and copy folder `pub/media` on server magento to folder `packages/venia-concept/dist/pub/media`
-        - You must change `github-oauth` in file `magento/auth.json` with 

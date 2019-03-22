@@ -175,18 +175,6 @@ function exit_print_error() {
     exit
 }
 
-function print_site_magento_list() {
-    print_status "Site magento list:"
-    for i in "${MAGENTO_VERSION_ARRAY[@]}"
-    do
-        local magento_version="${i//./}"
-        echo
-        echo "Magento version ${i}"
-        echo "Frontend: http://m${magento_version}.io/"
-        echo "Backend: http://m${magento_version}.io/admin"
-    done
-}
-
 # check environment for install pwa studio: SAMPLE_DATA=0, INSTALL_PWA_STUDIO=1 and $1 is version magento which must greater or equals 2.3.0
 function check_install_pwa_studio() {
     local is_install_pwa_studio=0
@@ -201,3 +189,74 @@ function check_install_pwa_studio() {
     echo ${is_install_pwa_studio}
 }
 #validate environment with install pwa studio
+
+function get_magento_host_name_from_version() {
+	local ip_address=`hostname -I | cut -d' ' -f1`
+    local port_service_docker=`get_port_service_docker "${1}"`
+    local magento_url="${ip_address}:${port_service_docker}"
+    local magento_version="${1//./}"
+	if [[ ${INSTALL_MAGENTO_WITH_DOMAIN} = '1' ]]; then
+		magento_url="${MAGENTO_URL_PREFIX}${magento_version}.${MAGENTO_URL_TLD}"
+	fi
+	echo ${magento_url}
+}
+
+# get magento url from version magento
+function get_magento_url_from_version() {
+	local magento_host_name=`get_magento_host_name_from_version ${1}`
+    local magento_url="http://${magento_host_name}/"
+	echo ${magento_url}
+}
+
+function get_magento_db_name() {
+    local port_service_docker=`get_port_service_docker "${1}"`
+    local magento_db_name="magento${port_service_docker}"
+    echo ${magento_db_name}
+}
+
+function get_port_public_mapping_service_docker() {
+	local docker_command=`get_docker_command`
+    local port=`bash -c "${docker_command} port ${1} ${2}"`
+	if [[ ! -z ${port} ]]; then
+	    set -f                      # avoid globbing (expansion of *).
+		local array=(${port//:/ })
+		echo ${array[1]}
+	fi
+}
+
+function print_site_magento_list() {
+	local ip_address=`hostname -I | cut -d' ' -f1`
+	local port_phpmyadmin=`get_port_public_mapping_service_docker 'phpmyadmin' 80`
+	local port_mailhog=`get_port_public_mapping_service_docker 'mailhog' 8025`
+	local folder_mangento=`bash -c "pwd"`
+	print_status "Phpmyadmin: http://${ip_address}:${port_phpmyadmin}/"
+	print_status "Mailhog: http://${ip_address}:${port_mailhog}/"
+    print_status "Site magento list:"
+    for i in "${MAGENTO_VERSION_ARRAY[@]}"
+    do
+        local magento_url=`get_magento_url_from_version ${i}`
+        echo
+        echo "Magento version ${i}"
+        echo "Frontend: ${magento_url}"
+        echo "Backend: ${magento_url}admin"
+        echo "Folder magento: ${folder_mangento}/src/${i//./}"
+    done
+}
+
+# check magento version installed
+function check_magento_version_installed() {
+	if [[ ! -z ${1} ]]; then
+	    local magento_url=`get_magento_url_from_version ${1}`
+	    RESPONSE=`bash -c "curl -s ${magento_url}magento_version"`
+	    if [[ ${RESPONSE:0:8} = "Magento/" ]]; then
+	        echo 1
+	    else
+		    echo 0
+		fi
+	fi
+}
+
+# check repository docker hub exist
+function docker_tag_exists() {
+    curl --silent -f -lSL https://index.docker.io/v1/repositories/$1/tags/$2 > /dev/null
+}
