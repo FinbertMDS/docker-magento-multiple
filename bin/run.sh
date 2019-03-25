@@ -75,11 +75,11 @@ function add_host_to_local() {
 }
 
 function main() {
-#    curl_check
-#    run_docker
-#    run_sql_init_database
+    curl_check
+    run_docker
+    run_sql_init_database
     install_magento_for_all_containers
-#    add_host_to_local
+    add_host_to_local
     print_site_magento_list
 }
 
