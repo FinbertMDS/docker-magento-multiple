@@ -235,11 +235,13 @@ function print_site_magento_list() {
     for i in "${MAGENTO_VERSION_ARRAY[@]}"
     do
         local magento_url=`get_magento_url_from_version ${i}`
+        local port_service_docker=`get_port_service_docker ${i}`
         echo
         echo "Magento version ${i}"
         echo "Frontend: ${magento_url}"
         echo "Backend: ${magento_url}admin"
         echo "Folder magento: ${folder_mangento}/src/${i//./}"
+        echo "DB name: magento${port_service_docker}"
     done
 }
 
