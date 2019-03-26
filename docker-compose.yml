@@ -7,6 +7,7 @@ services:
 #    container_name: docker-magento-multiple_db_1
 #    volumes:
 #      - ./data/mysql:/var/lib/mysql
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: magento
     networks:
@@ -14,6 +15,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
+    restart: always
     ports:
       - 2122:80
     environment:
@@ -25,9 +27,10 @@ services:
 
   mailhog:
     image: mailhog/mailhog
+    restart: always
     ports:
       - 1025:1025
-      - 8025:8025
+      - 8026:8025
     networks:
       - webnet
 

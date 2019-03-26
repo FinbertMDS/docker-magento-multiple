@@ -187,6 +187,7 @@ services:
   ${docker_hub_tag_name}:
     ${docker_compose_service_magento}
 #    container_name: docker-magento-multiple_magento_${i}_${php_version}_1
+    restart: always
     ports:
       - ${port_service_docker}:80
     depends_on:

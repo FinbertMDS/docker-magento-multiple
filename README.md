@@ -29,7 +29,7 @@
 	- Lưu ý: 
 		- Tài khoản admin magento mặc định:
 			```text
-			admin1/admin123
+			admin1/admin123 (luôn có user này, thông tin được config trong file .env: MAGENTO_ADMIN_USERNAME và MAGENTO_ADMIN_PASSWORD)
 			hoặc
 			admin/admin123
 			```
@@ -39,11 +39,24 @@
 			```bash
 			./bin/main.sh
 			```
+		- Sau khi đã cài magento 1 lần, muốn xóa magento và cài lại phải giữa nguyên config `MAGENTO_VERSIONES` và chạy lệnh xóa magento bên dưới, rồi mới sửa config `MAGENTO_VERSIONES` và install lại magento từ đầu.
+		
+			Do cấu trúc của project này lưu service của docker riêng biệt với từng version magento, lệnh xóa magento lấy các config `MAGENTO_VERSIONES` để lấy các file docker-compose cần thiết với các version magento.
 			
 - Muốn xóa magento thì chạy lệnh dưới để down container chạy magento và remove source code magento.
 	```bash
 	./bin/remove.sh
 	```
+	
+- Muốn tạm dừng docker chạy magento: 
+	```bash
+	./bin/stop.sh
+	```
+	Sau đó muốn tiếp tục chạy lại magento thì start lại docker bằng lệnh
+	```bash
+	./bin/start.sh
+	```
+	Trong trường hợp server bị tắt mà động tự động chạy lại docker thì cũng chạy bằng lệnh trên để start lại docker mà không cần chạy lệnh install magento.
 	
 - Folder chứa code Magento
 	```bash
