@@ -20,7 +20,7 @@
 		- Giá trị là 0: install magento với port.
 	- Lưu ý: Các config trong file .env. True=1, False=0.
 - Các file bash script trong folder `bin` có thể tham khảo ý nghĩa trong file `README_Dev.md`
-- Muốn install magento thì làm theo các bước sau:
+- Install magento thì làm theo các bước sau:
 	- Sửa file .env: config version magento.
 	- Chạy lệnh cài đặt: 
 		```bash
@@ -43,20 +43,28 @@
 		
 			Do cấu trúc của project này lưu service của docker riêng biệt với từng version magento, lệnh xóa magento lấy các config `MAGENTO_VERSIONES` để lấy các file docker-compose cần thiết với các version magento.
 			
-- Muốn xóa magento thì chạy lệnh dưới để down container chạy magento và remove source code magento.
+- Xóa magento thì chạy lệnh dưới để down container chạy magento và remove source code magento.
 	```bash
 	./bin/remove.sh
 	```
 	
-- Muốn tạm dừng docker chạy magento: 
+- Tạm dừng docker đang chạy magento: 
 	```bash
 	./bin/stop.sh
 	```
-	Sau đó muốn tiếp tục chạy lại magento thì start lại docker bằng lệnh
+	Sau đó tiếp tục chạy lại magento thì start lại docker bằng lệnh
 	```bash
 	./bin/start.sh
 	```
 	Trong trường hợp server bị tắt mà động tự động chạy lại docker thì cũng chạy bằng lệnh trên để start lại docker mà không cần chạy lệnh install magento.
+
+- SSH tới docker:
+	```bash
+	./bin/ssh.sh (với 1 version magento được install)
+	./bin/ssh.sh <version_magento> <user_access> (với 1 version magento được install)
+	# ./bin/ssh.sh 2.2.6 www-data
+	# ./bin/ssh.sh 2.2.6 root
+	```
 	
 - Folder chứa code Magento
 	```bash
