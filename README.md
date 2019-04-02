@@ -43,6 +43,22 @@
 		
 			Do cấu trúc của project này lưu service của docker riêng biệt với từng version magento, lệnh xóa magento lấy các config `MAGENTO_VERSIONES` để lấy các file docker-compose cần thiết với các version magento.
 			
+		- Khi địa chỉ IP của server bị thay đổi. Nếu cài đặt magento sử dụng port thì cần lưu ý phải đổi lại url của magento bằng cách:
+		```bash
+		./bin/ssh.sh
+		
+		php bin/magento s:stor:set --base-url=<new_url>
+		# php bin/magento s:stor:set --base-url=http://192.168.120.40:22571/
+		
+		php bin/magento c:f
+		
+		echo "Edit config in file app/etc/env.php about info: system > default > web > unsecure > base_url"
+		# Edit config in file app/etc/env.php about info: system > default > web > unsecure > base_url
+		
+		php bin/magento s:up 
+		# import config from file app/etc/env.php
+		```
+			
 - Xóa magento thì chạy lệnh dưới để down container chạy magento và remove source code magento.
 	```bash
 	./bin/remove.sh
