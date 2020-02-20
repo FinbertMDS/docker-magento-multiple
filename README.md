@@ -13,6 +13,7 @@
 ## Cách sử dụng
 - Yêu cầu phần cứng:
 	- Cài đặt trên Ubuntu đã cài docker.
+	- Ubuntu cần phải cài đặt thêm phần mềm: wget
 - File cấu hình: .env chứa thông tin config của toàn bộ repo gồm một số config quan trọng:
 	- MAGENTO_VERSIONES: version của tất cả các phiên bản Mangeto, nếu cài đặt nhiều version thì các version cách nhau bởi dấu phẩy. Ví dụ: `MAGENTO_VERSIONES=2.2.5,2.2.6`, nếu chỉ cài đặt 1 version thì như ví dụ: `MAGENTO_VERSIONES=2.2.5` 
 	- INSTALL_MAGENTO_WITH_DOMAIN: 
